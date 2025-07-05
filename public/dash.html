@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Neuro.Place - Admin Dashboard</title>
+    <link rel="stylesheet" href="static/css/tailwind.css" />
+    <link rel="stylesheet" href="static/css/style.css" />
+    <link rel="stylesheet" href="static/css/dash.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round&display=block" rel="stylesheet" />
+    <script src="https://kit.fontawesome.com/9e042e5224.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="flex flex-col bg-gray-800 text-white">
+    <header class="header bg-gray-900">
+        <div class="relative container mx-auto px-6">
+            <div class="relative flex items-center justify-between">
+                <h1 class="text-xl font-semibold">Neuro.Place - Admin Dashboard</h1>
+                <div class="flex items-center gap-2">
+                    <span id="userName" class="text-sm">Loading...</span>
+                    <button id="logoutBtn"
+                        class="btn btn-danger flex items-center gap-1 px-3 py-1.5 text-sm">
+                        <span class="material-icons-round" style="font-size: 16px;">logout</span>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-6 space-y-6">
+        <!-- Grid Preview Section -->
+        <section id="gridPreviewSection" class="panel bg-gray-700 p-4 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-3">Grid Preview</h2>
+            <div class="flex items-start gap-4">
+                <canvas id="adminGridCanvas" class="border border-gray-600"></canvas>
+                <button id="updatePreviewBtn" class="btn btn-primary px-4 py-2">Update Preview</button>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section id="statsSection" class="panel bg-gray-700 p-4 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-3">Live Stats</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <p>Active WebSocket Connections: <span id="activeConnectionsCount">Loading...</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pixel Placement Log -->
+        <section id="pixelLogSection" class="panel bg-gray-700 p-4 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-3">Pixel Placement Log</h2>
+            <div id="pixelPlacementLog" class="h-64 overflow-y-auto border border-gray-600 p-2 rounded">
+                <p class="text-gray-400">Loading log...</p>
+                <!-- Log entries will be added here -->
+            </div>
+        </section>
+
+        <!-- Admin Actions Section -->
+        <section id="adminActionsSection" class="panel bg-gray-700 p-4 rounded-lg shadow">
+            <h2 class="text-lg font-semibold mb-3">Admin Actions</h2>
+            <div class="space-y-4">
+                <!-- Force Disconnect -->
+                <div class="action-group border border-gray-600 p-3 rounded">
+                    <h3 class="font-medium mb-2">Force Disconnect Session</h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="disconnectSessionId" placeholder="Session ID" class="input-field bg-gray-800 border-gray-600 flex-grow">
+                        <button id="forceDisconnectBtn" class="btn btn-warning px-3 py-1.5 text-sm">Disconnect</button>
+                    </div>
+                </div>
+
+                <!-- Push Toast Message -->
+                <div class="action-group border border-gray-600 p-3 rounded">
+                    <h3 class="font-medium mb-2">Push Toast Message</h3>
+                    <div class="flex flex-col gap-2">
+                        <input type="text" id="toastMessage" placeholder="Toast Message" class="input-field bg-gray-800 border-gray-600">
+                        <select id="toastType" class="input-field bg-gray-800 border-gray-600">
+                            <option value="info">Info</option>
+                            <option value="success">Success</option>
+                            <option value="warning">Warning</option>
+                            <option value="error">Error</option>
+                        </select>
+                        <button id="pushToastBtn" class="btn btn-info px-3 py-1.5 text-sm self-start">Push Toast</button>
+                    </div>
+                </div>
+
+                <!-- Push Announcement -->
+                <div class="action-group border border-gray-600 p-3 rounded">
+                    <h3 class="font-medium mb-2">Push Announcement</h3>
+                     <div class="flex flex-col gap-2">
+                        <input type="text" id="announcementMessage" placeholder="Announcement Message (max 100 chars)" class="input-field bg-gray-800 border-gray-600">
+                        <button id="pushAnnouncementBtn" class="btn btn-info px-3 py-1.5 text-sm self-start">Push Announcement</button>
+                    </div>
+                </div>
+
+                <!-- Update Status.html Message -->
+                <div class="action-group border border-gray-600 p-3 rounded">
+                    <h3 class="font-medium mb-2">Update Status Page Message</h3>
+                    <div class="flex flex-col gap-2">
+                        <textarea id="statusPageMessage" placeholder="Message for status.html" rows="3" class="input-field bg-gray-800 border-gray-600"></textarea>
+                        <button id="updateStatusMsgBtn" class="btn btn-info px-3 py-1.5 text-sm self-start">Update Message</button>
+                    </div>
+                </div>
+
+                <!-- Pause/Resume Grid Updates -->
+                <div class="action-group border border-gray-600 p-3 rounded">
+                    <h3 class="font-medium mb-2">Grid Updates Control</h3>
+                    <div class="flex items-center gap-2">
+                        <span id="gridUpdateStatus" class="text-sm">Status: Unknown</span>
+                        <button id="pauseUpdatesBtn" class="btn btn-warning px-3 py-1.5 text-sm">Pause Updates</button>
+                        <button id="resumeUpdatesBtn" class="btn btn-success px-3 py-1.5 text-sm">Resume Updates</button>
+                    </div>
+                </div>
+
+                <!-- Grid Manipulation -->
+                <div class="action-group border border-gray-600 p-3 rounded">
+                    <h3 class="font-medium mb-2">Grid Manipulation</h3>
+                    <div class="flex flex-col gap-3">
+                        <div class="flex items-center gap-2">
+                            <input type="number" id="gridManipX" placeholder="X" class="input-field bg-gray-800 border-gray-600 w-20">
+                            <input type="number" id="gridManipY" placeholder="Y" class="input-field bg-gray-800 border-gray-600 w-20">
+                            <input type="color" id="gridManipColor" value="#FFFFFF" class="input-field h-10 w-16 bg-gray-800 border-gray-600 p-1">
+                            <button id="setPixelBtn" class="btn btn-action px-3 py-1.5 text-sm">Set Pixel</button>
+                            <button id="clearPixelBtn" class="btn btn-danger px-3 py-1.5 text-sm">Clear Pixel (to White)</button>
+                        </div>
+                        <div>
+                             <button id="clearFullGridBtn" class="btn btn-danger px-3 py-1.5 text-sm">Clear Entire Grid</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="static/js/dash.js"></script>
+</body>
+
+</html>
