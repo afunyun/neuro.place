@@ -1912,8 +1912,9 @@ document.addEventListener("DOMContentLoaded", () => {
 			const windowWidth = 600;
 			const windowHeight = 400;
 
+			// Position off-screen at the bottom to prevent flex container interference
 			const x = (viewportWidth - windowWidth) / 2;
-			const y = (viewportHeight - windowHeight) / 2;
+			const y = viewportHeight + 100; // Move way below viewport
 
 			this.consoleWindow.style.left = `${x}px`;
 			this.consoleWindow.style.top = `${y}px`;
