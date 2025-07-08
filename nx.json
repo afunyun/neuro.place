@@ -1,35 +1,29 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "targetDefaults": {
-    "build-css": {
-      "outputs": [
-        "{projectRoot}//public/static/css/"
-      ],
-      "cache": true
-    },
-    "build-css:dev": {
-      "outputs": [
-        "{projectRoot}//public/static/css/"
-      ],
-      "cache": true
-    },
-    "build-css:prod": {
-      "outputs": [
-        "{projectRoot}//public/static/css/"
-      ],
-      "cache": true
-    },
-    "deploy": {
-      "cache": true
-    },
-    "deploy:dev": {
-      "cache": true
-    },
-    "deploy:only": {
-      "cache": true
-    },
-    "deploy:dev:only": {
-      "cache": true
-    }
-  }
+	"$schema": "./node_modules/nx/schemas/nx-schema.json",
+	"targetDefaults": {
+		"build-css": {
+			"outputs": ["{projectRoot}//public/static/css/"],
+			"cache": true
+		},
+		"build-css:dev": {
+			"outputs": ["{projectRoot}//public/static/css/"],
+			"cache": true
+		},
+		"build-css:prod": {
+			"outputs": ["{projectRoot}//public/static/css/"],
+			"cache": true
+		},
+		"deploy": {
+			"cache": true
+		},
+		"deploy:dev": {
+			"cache": true
+		},
+		"deploy:only": {
+			"cache": true
+		},
+		"deploy:dev:only": {
+			"cache": true
+		}
+	}
 }

@@ -1,0 +1,55 @@
+@layer utilities {
+	.items-center {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.items-right {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
+
+	.items-left {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	.shadow-sm {
+		box-shadow: var(--shadow-sm);
+	}
+
+	.shadow-md {
+		box-shadow: var(--shadow-md);
+	}
+
+	.shadow-lg {
+		box-shadow: var(--shadow-lg);
+	}
+
+	.rounded-sm {
+		border-radius: var(--radius-sm);
+	}
+
+	.rounded-md {
+		border-radius: var(--radius-md);
+	}
+
+	.rounded-lg {
+		border-radius: var(--radius-lg);
+	}
+
+	.rounded-full {
+		border-radius: var(--radius-full);
+	}
+
+	.transition-fast {
+		transition: var(--transition-fast);
+	}
+
+	.transition-default {
+		transition: var(--transition-default);
+	}
+}
