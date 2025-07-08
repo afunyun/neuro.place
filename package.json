@@ -20,7 +20,8 @@
     "autoprefixer": "^10.4.21",
     "postcss": "^8.5.6",
     "postcss-cli": "^11.0.1",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "nx": "21.2.2"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -29,5 +30,6 @@
     "@cloudflare/workerd-linux-64": "^1.20250701.0",
     "hono": "^4.8.3",
     "wrangler": "^4.22.0"
-  }
+  },
+  "nx": {}
 }
