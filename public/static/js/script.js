@@ -53,6 +53,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	const zoomOutBtn = document.getElementById("zoomOutBtn");
 	const themeToggleBtn = document.getElementById("themeToggleBtn");
 	const bottomControls = document.getElementById("themeToggle");
+	// Mobile menu elements
+	const mobileMenuToggle = document.getElementById("mobileMenuToggle");
+	const leftPanel = document.querySelector(".left-panel");
+	const mobileCloseBtn = document.querySelector(".mobile-close-btn");
+	const desktopCollapseBtn = document.querySelector(".desktop-collapse-btn");
+
+	// Create mobile sidebar overlay
+	const mobileOverlay = document.createElement("div");
+	mobileOverlay.className = "mobile-sidebar-overlay";
+	document.body.appendChild(mobileOverlay);
 
 	console.log("Theme toggle button found:", themeToggleBtn);
 
@@ -122,6 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 
 		if (liveViewCanvas) {
+			// Keep internal drawing grid but allow CSS to scale canvas
 			liveViewCanvas.width = LIVE_VIEW_CANVAS_WIDTH;
 			liveViewCanvas.height = LIVE_VIEW_CANVAS_HEIGHT;
 		}
@@ -929,7 +940,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const touch2 = event.touches[1];
 		return Math.sqrt(
 			(touch2.clientX - touch1.clientX) ** 2 +
-				(touch2.clientY - touch1.clientY) ** 2,
+			(touch2.clientY - touch1.clientY) ** 2,
 		);
 	}
 
@@ -1571,7 +1582,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					deltaY: -1,
 					clientX: rect.left + canvas.clientWidth / 2,
 					clientY: rect.top + canvas.clientHeight / 2,
-					preventDefault: () => {},
+					preventDefault: () => { },
 				});
 			});
 		}
@@ -1582,7 +1593,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					deltaY: 1,
 					clientX: rect.left + canvas.clientWidth / 2,
 					clientY: rect.top + canvas.clientHeight / 2,
-					preventDefault: () => {},
+					preventDefault: () => { },
 				});
 			});
 		}
@@ -1590,6 +1601,124 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (themeToggleBtn) {
 			themeToggleBtn.addEventListener("click", toggleDark);
 		}
+
+		// Sidebar functionality (works for both mobile and desktop)
+		function isMobileView() {
+			return window.innerWidth <= 768;
+		}
+
+		function toggleSidebar() {
+			if (!leftPanel) return;
+
+			if (isMobileView()) {
+				// Mobile behavior
+				const isOpen = leftPanel.classList.contains("open");
+
+				if (isOpen) {
+					leftPanel.classList.remove("open");
+					mobileOverlay.classList.remove("active");
+					document.body.style.overflow = "";
+				} else {
+					leftPanel.classList.add("open");
+					mobileOverlay.classList.add("active");
+					document.body.style.overflow = "hidden";
+				}
+			} else {
+				// Desktop behavior
+				const isCollapsed = leftPanel.classList.contains("collapsed");
+
+				if (isCollapsed) {
+					leftPanel.classList.remove("collapsed");
+					localStorage.setItem("sidebarCollapsed", "false");
+				} else {
+					leftPanel.classList.add("collapsed");
+					localStorage.setItem("sidebarCollapsed", "true");
+				}
+			}
+		}
+
+		function closeSidebar() {
+			if (!leftPanel) return;
+
+			if (isMobileView()) {
+				// Mobile behavior
+				leftPanel.classList.remove("open");
+				mobileOverlay.classList.remove("active");
+				document.body.style.overflow = "";
+			} else {
+				// Desktop behavior
+				leftPanel.classList.add("collapsed");
+				localStorage.setItem("sidebarCollapsed", "true");
+			}
+		}
+
+		// Legacy function names for compatibility
+		function toggleMobileMenu() {
+			toggleSidebar();
+		}
+
+		function closeMobileMenu() {
+			closeSidebar();
+		}
+
+		// Sidebar event listeners
+		if (mobileMenuToggle) {
+			mobileMenuToggle.addEventListener("click", toggleSidebar);
+		}
+
+		if (desktopCollapseBtn) {
+			desktopCollapseBtn.addEventListener("click", toggleSidebar);
+		}
+
+		if (mobileCloseBtn) {
+			mobileCloseBtn.addEventListener("click", closeSidebar);
+		}
+
+		if (mobileOverlay) {
+			mobileOverlay.addEventListener("click", closeSidebar);
+		}
+
+		// Close mobile menu when clicking inside the left panel (optional)
+		// This allows users to close the menu by clicking on content
+		if (leftPanel) {
+			leftPanel.addEventListener("click", (e) => {
+				// Only close if clicking directly on the panel, not on interactive elements
+				if (e.target === leftPanel || e.target.closest(".panel-header")) {
+					closeMobileMenu();
+				}
+			});
+		}
+
+		// Close mobile menu on window resize if screen becomes desktop size
+		window.addEventListener("resize", () => {
+			if (window.innerWidth > 768) {
+				// Switched to desktop view
+				if (leftPanel) {
+					leftPanel.classList.remove("open");
+					mobileOverlay.classList.remove("active");
+					document.body.style.overflow = "";
+				}
+			} else {
+				// Switched to mobile view
+				if (leftPanel) {
+					leftPanel.classList.remove("collapsed");
+				}
+			}
+		});
+
+		// Initialize sidebar state on page load
+		function initializeSidebar() {
+			if (leftPanel && !isMobileView()) {
+				// On desktop, restore collapsed state from localStorage
+				const savedCollapsed = localStorage.getItem("sidebarCollapsed");
+				if (savedCollapsed === "true") {
+					leftPanel.classList.add("collapsed");
+				}
+			}
+		}
+
+		// Initialize sidebar on page load
+		initializeSidebar();
 
 		function clearChatLog() {
 			const chatItems = pixelChatLog.querySelectorAll(".log-entry");
@@ -1775,7 +1904,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 		}
 
-		showIfAdmin() {}
+		showIfAdmin() { }
 
 		createConsoleWindow() {
 			this.consoleWindow = document.createElement("div");

@@ -667,12 +667,12 @@ input:where([type='button'], [type='reset'], [type='submit']),
 	background: var(--bg-secondary);
 	border-right: 1px solid var(--border);
 	display: flex;
+	height: calc(100vh - 155px);
 	flex-direction: column;
 	padding: 1.5rem;
 	gap: 1.5rem;
 	overflow-y: auto;
 	position: relative;
-	height: 100%;
 }
 .panel-section {
 	background: var(--bg-tertiary);
@@ -730,6 +730,12 @@ input:where([type='button'], [type='reset'], [type='submit']),
 .live-view-container:hover::before {
 	opacity: 0.3;
 }
+/* Scale the preview canvas to match its container dimensions */
+.live-view-container>canvas {
+	width: 100%;
+	height: 100%;
+	display: block;
+}
 @keyframes gradient-border {
 
 	0%,
@@ -765,8 +771,9 @@ input:where([type='button'], [type='reset'], [type='submit']),
 	backdrop-filter: blur(20px);
 	-webkit-backdrop-filter: blur(20px);
 	border-top: 1px solid var(--border);
-	padding: 0.5rem 1rem !important;
+	padding: 1rem !important;
 	position: relative;
+	bottom: 20px;
 	z-index: 10;
 }
 .controls-container {
@@ -846,10 +853,24 @@ input:where([type='button'], [type='reset'], [type='submit']),
 .credits a:hover {
 	color: var(--accent-hover);
 }
+.main-content {
+	flex: 1;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.canvas-container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
 .flex-container {
 	flex: 1;
 	display: flex;
-	min-height: calc(100vh - 120px);
+	min-height: 0;
 	overflow: hidden;
 }
 ::-webkit-scrollbar {
@@ -1072,12 +1093,12 @@ input:checked+.slider:before {
 }
 .connection-status.connected:hover::after {
 	content: "Connected";
-	margin-left: 4px;
+	margin-left: 8px;
 	font-size: 11px;
 }
 .connection-status.disconnected:hover::after {
 	content: "Disconnected";
-	margin-left: 4px;
+	margin-left: 8px;
 	font-size: 11px;
 }
 .countdown-timer-overlay,
