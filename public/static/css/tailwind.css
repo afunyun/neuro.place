@@ -63,13 +63,11 @@
 	}
 
 	.nweroStyle {
-		--background: repeating-linear-gradient(
-			135deg,
-			#ff99cc 0px,
-			#ff99cc 18px,
-			#ffadd6 18px,
-			#ffadd6 20px
-		);
+		--background: repeating-linear-gradient(135deg,
+				#ff99cc 0px,
+				#ff99cc 18px,
+				#ffadd6 18px,
+				#ffadd6 20px);
 		--bg-primary: #ff99cc;
 		--bg-secondary: #ff6699;
 		--bg-tertiary: #e75480;
@@ -94,6 +92,7 @@
 		--subtle-gradient-color: #ffffff;
 	}
 }
+
 @layer base {
 
 	*,
@@ -122,6 +121,7 @@
 		margin: 0;
 	}
 }
+
 @layer utilities {
 	.items-center {
 		display: flex;
@@ -177,6 +177,7 @@
 		transition: var(--transition-default);
 	}
 }
+
 /* biome-ignore lint/unknownAtRules */
 /*
   1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
@@ -188,11 +189,16 @@
 ::before,
 ::backdrop,
 ::file-selector-button {
-  box-sizing: border-box; /* 1 */
-  margin: 0; /* 2 */
-  padding: 0; /* 2 */
-  border: 0 solid; /* 3 */
+	box-sizing: border-box;
+	/* 1 */
+	margin: 0;
+	/* 2 */
+	padding: 0;
+	/* 2 */
+	border: 0 solid;
+	/* 3 */
 }
+
 /*
   1. Use a consistent sensible line-height in all browsers.
   2. Prevent adjustments of font size after orientation changes in iOS.
@@ -204,42 +210,54 @@
 */
 html,
 :host {
-  line-height: 1.5; /* 1 */
-  -webkit-text-size-adjust: 100%; /* 2 */
-  -moz-tab-size: 4;
-    -o-tab-size: 4;
-       tab-size: 4; /* 3 */
-  font-family: --theme(
-    --default-font-family,
-    ui-sans-serif,
-    system-ui,
-    sans-serif,
-    'Apple Color Emoji',
-    'Segoe UI Emoji',
-    'Segoe UI Symbol',
-    'Noto Color Emoji'
-  ); /* 4 */
-  font-feature-settings: --theme(--default-font-feature-settings, normal); /* 5 */
-  font-variation-settings: --theme(--default-font-variation-settings, normal); /* 6 */
-  -webkit-tap-highlight-color: transparent; /* 7 */
+	line-height: 1.5;
+	/* 1 */
+	-webkit-text-size-adjust: 100%;
+	/* 2 */
+	-moz-tab-size: 4;
+	-o-tab-size: 4;
+	tab-size: 4;
+	/* 3 */
+	font-family: --theme(--default-font-family,
+			ui-sans-serif,
+			system-ui,
+			sans-serif,
+			'Apple Color Emoji',
+			'Segoe UI Emoji',
+			'Segoe UI Symbol',
+			'Noto Color Emoji'
+		);
+	/* 4 */
+	font-feature-settings: --theme(--default-font-feature-settings, normal);
+	/* 5 */
+	font-variation-settings: --theme(--default-font-variation-settings, normal);
+	/* 6 */
+	-webkit-tap-highlight-color: transparent;
+	/* 7 */
 }
+
 /*
   1. Add the correct height in Firefox.
   2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
   3. Reset the default border style to a 1px solid border.
 */
 hr {
-  height: 0; /* 1 */
-  color: inherit; /* 2 */
-  border-top-width: 1px; /* 3 */
+	height: 0;
+	/* 1 */
+	color: inherit;
+	/* 2 */
+	border-top-width: 1px;
+	/* 3 */
 }
+
 /*
   Add the correct text decoration in Chrome, Edge, and Safari.
 */
 abbr:where([title]) {
-  -webkit-text-decoration: underline dotted;
-  text-decoration: underline dotted;
+	-webkit-text-decoration: underline dotted;
+	text-decoration: underline dotted;
 }
+
 /*
   Remove the default font size and weight for headings.
 */
@@ -249,24 +267,27 @@ h3,
 h4,
 h5,
 h6 {
-  font-size: inherit;
-  font-weight: inherit;
+	font-size: inherit;
+	font-weight: inherit;
 }
+
 /*
   Reset links to optimize for opt-in styling instead of opt-out.
 */
 a {
-  color: inherit;
-  -webkit-text-decoration: inherit;
-  text-decoration: inherit;
+	color: inherit;
+	-webkit-text-decoration: inherit;
+	text-decoration: inherit;
 }
+
 /*
   Add the correct font weight in Edge and Safari.
 */
 b,
 strong {
-  font-weight: bolder;
+	font-weight: bolder;
 }
+
 /*
   1. Use the user's configured `mono` font-family by default.
   2. Use the user's configured `mono` font-feature-settings by default.
@@ -277,79 +298,94 @@ code,
 kbd,
 samp,
 pre {
-  font-family: --theme(
-    --default-mono-font-family,
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    'Liberation Mono',
-    'Courier New',
-    monospace
-  ); /* 1 */
-  font-feature-settings: --theme(--default-mono-font-feature-settings, normal); /* 2 */
-  font-variation-settings: --theme(--default-mono-font-variation-settings, normal); /* 3 */
-  font-size: 1em; /* 4 */
+	font-family: --theme(--default-mono-font-family,
+			ui-monospace,
+			SFMono-Regular,
+			Menlo,
+			Monaco,
+			Consolas,
+			'Liberation Mono',
+			'Courier New',
+			monospace);
+	/* 1 */
+	font-feature-settings: --theme(--default-mono-font-feature-settings, normal);
+	/* 2 */
+	font-variation-settings: --theme(--default-mono-font-variation-settings, normal);
+	/* 3 */
+	font-size: 1em;
+	/* 4 */
 }
+
 /*
   Add the correct font size in all browsers.
 */
 small {
-  font-size: 80%;
+	font-size: 80%;
 }
+
 /*
   Prevent `sub` and `sup` elements from affecting the line height in all browsers.
 */
 sub,
 sup {
-  font-size: 75%;
-  line-height: 0;
-  position: relative;
-  vertical-align: baseline;
+	font-size: 75%;
+	line-height: 0;
+	position: relative;
+	vertical-align: baseline;
 }
+
 sub {
-  bottom: -0.25em;
+	bottom: -0.25em;
 }
+
 sup {
-  top: -0.5em;
+	top: -0.5em;
 }
+
 /*
   1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
   2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
   3. Remove gaps between table borders by default.
 */
 table {
-  text-indent: 0; /* 1 */
-  border-color: inherit; /* 2 */
-  border-collapse: collapse; /* 3 */
+	text-indent: 0;
+	/* 1 */
+	border-color: inherit;
+	/* 2 */
+	border-collapse: collapse;
+	/* 3 */
 }
+
 /*
   Use the modern Firefox focus style for all focusable elements.
 */
 :-moz-focusring {
-  outline: auto;
+	outline: auto;
 }
+
 /*
   Add the correct vertical alignment in Chrome and Firefox.
 */
 progress {
-  vertical-align: baseline;
+	vertical-align: baseline;
 }
+
 /*
   Add the correct display in Chrome and Safari.
 */
 summary {
-  display: list-item;
+	display: list-item;
 }
+
 /*
   Make lists unstyled by default.
 */
 ol,
 ul,
 menu {
-  list-style: none;
+	list-style: none;
 }
+
 /*
   1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
   2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
@@ -363,17 +399,21 @@ audio,
 iframe,
 embed,
 object {
-  display: block; /* 1 */
-  vertical-align: middle; /* 2 */
+	display: block;
+	/* 1 */
+	vertical-align: middle;
+	/* 2 */
 }
+
 /*
   Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
 */
 img,
 video {
-  max-width: 100%;
-  height: auto;
+	max-width: 100%;
+	height: auto;
 }
+
 /*
   1. Inherit font styles in all browsers.
   2. Remove border radius in all browsers.
@@ -386,87 +426,113 @@ select,
 optgroup,
 textarea,
 ::file-selector-button {
-  font: inherit; /* 1 */
-  font-feature-settings: inherit; /* 1 */
-  font-variation-settings: inherit; /* 1 */
-  letter-spacing: inherit; /* 1 */
-  color: inherit; /* 1 */
-  border-radius: 0; /* 2 */
-  background-color: transparent; /* 3 */
-  opacity: 1; /* 4 */
+	font: inherit;
+	/* 1 */
+	font-feature-settings: inherit;
+	/* 1 */
+	font-variation-settings: inherit;
+	/* 1 */
+	letter-spacing: inherit;
+	/* 1 */
+	color: inherit;
+	/* 1 */
+	border-radius: 0;
+	/* 2 */
+	background-color: transparent;
+	/* 3 */
+	opacity: 1;
+	/* 4 */
 }
+
 /*
   Restore default font weight.
 */
 :where(select:is([multiple], [size])) optgroup {
-  font-weight: bolder;
+	font-weight: bolder;
 }
+
 /*
   Restore indentation.
 */
 :where(select:is([multiple], [size])) optgroup option {
-  padding-inline-start: 20px;
+	padding-inline-start: 20px;
 }
+
 /*
   Restore space after button.
 */
 ::file-selector-button {
-  margin-inline-end: 4px;
+	margin-inline-end: 4px;
 }
+
 /*
   Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
 */
 ::-moz-placeholder {
-  opacity: 1;
+	opacity: 1;
 }
+
 ::placeholder {
-  opacity: 1;
+	opacity: 1;
 }
+
 /*
   Set the default placeholder color to a semi-transparent version of the current text color in browsers that do not
   crash when using `color-mix(…)` with `currentcolor`. (https://github.com/tailwindlabs/tailwindcss/issues/17194)
 */
-@supports (not (-webkit-appearance: -apple-pay-button)) /* Not Safari */ or
-  (contain-intrinsic-size: 1px) /* Safari 17+ */ {
-  ::-moz-placeholder {
-    color: color-mix(in oklab, currentcolor 50%, transparent);
-  }
-  ::placeholder {
-    color: color-mix(in oklab, currentcolor 50%, transparent);
-  }
+@supports (not (-webkit-appearance: -apple-pay-button))
+/* Not Safari */
+or (contain-intrinsic-size: 1px)
+/* Safari 17+ */
+	{
+	::-moz-placeholder {
+		color: color-mix(in oklab, currentcolor 50%, transparent);
+	}
+
+	::placeholder {
+		color: color-mix(in oklab, currentcolor 50%, transparent);
+	}
 }
+
 /*
   Prevent resizing textareas horizontally by default.
 */
 textarea {
-  resize: vertical;
+	resize: vertical;
 }
+
 /*
   Remove the inner padding in Chrome and Safari on macOS.
 */
 ::-webkit-search-decoration {
-  -webkit-appearance: none;
+	-webkit-appearance: none;
 }
+
 /*
   1. Ensure date/time inputs have the same height when empty in iOS Safari.
   2. Ensure text alignment can be changed on date/time inputs in iOS Safari.
 */
 ::-webkit-date-and-time-value {
-  min-height: 1lh; /* 1 */
-  text-align: inherit; /* 2 */
+	min-height: 1lh;
+	/* 1 */
+	text-align: inherit;
+	/* 2 */
 }
+
 /*
   Prevent height from changing on date/time inputs in macOS Safari when the input is set to `display: block`.
 */
 ::-webkit-datetime-edit {
-  display: inline-flex;
+	display: inline-flex;
 }
+
 /*
   Remove excess padding from pseudo-elements in date/time inputs to ensure consistent height across browsers.
 */
 ::-webkit-datetime-edit-fields-wrapper {
-  padding: 0;
+	padding: 0;
 }
+
 ::-webkit-datetime-edit,
 ::-webkit-datetime-edit-year-field,
 ::-webkit-datetime-edit-month-field,
@@ -476,37 +542,42 @@ textarea {
 ::-webkit-datetime-edit-second-field,
 ::-webkit-datetime-edit-millisecond-field,
 ::-webkit-datetime-edit-meridiem-field {
-  padding-block: 0;
+	padding-block: 0;
 }
+
 /*
   Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
 */
 :-moz-ui-invalid {
-  box-shadow: none;
+	box-shadow: none;
 }
+
 /*
   Correct the inability to style the border radius in iOS Safari.
 */
 button,
 input:where([type='button'], [type='reset'], [type='submit']),
 ::file-selector-button {
-  -webkit-appearance: button;
-     -moz-appearance: button;
-          appearance: button;
+	-webkit-appearance: button;
+	-moz-appearance: button;
+	appearance: button;
 }
+
 /*
   Correct the cursor style of increment and decrement buttons in Safari.
 */
 ::-webkit-inner-spin-button,
 ::-webkit-outer-spin-button {
-  height: auto;
+	height: auto;
 }
+
 /*
   Make elements with the HTML hidden attribute stay hidden by default.
 */
 [hidden]:where(:not([hidden='until-found'])) {
-  display: none !important;
+	display: none !important;
 }
+
 @font-face {
 	font-family: "First Coffee";
 	src: url(../fonts/First_Coffee.ttf) format("truetype");
@@ -514,6 +585,7 @@ input:where([type='button'], [type='reset'], [type='submit']),
 	font-style: normal;
 	font-display: swap;
 }
+
 @layer components {
 
 	#privacyStatementBtn,
@@ -536,47 +608,55 @@ input:where([type='button'], [type='reset'], [type='submit']),
 		width: 100% !important;
 		height: 100% !important;
 		-o-object-fit: cover;
-		   object-fit: cover;
+		object-fit: cover;
 		border-radius: inherit;
 	}
 }
+
 #privacyStatementBtn {
 	background: var(--bg-secondary);
 	border: 1px solid var(--border);
 	box-shadow: var(--shadow-sm);
 	transition: all 0.2s ease;
 }
+
 #privacyStatementBtn:hover {
 	background: var(--bg-tertiary);
 	border-color: var(--border-hover);
 	transform: translateY(-1px);
 }
+
 #adminToggleBtn {
 	background: var(--bg-secondary);
 	border: 1px solid var(--border);
 	box-shadow: var(--shadow-sm);
 	transition: all 0.2s ease;
 }
+
 #adminToggleBtn:hover {
 	background: var(--bg-tertiary);
 	border-color: var(--border-hover);
 	transform: translateY(-1px);
 }
+
 #openSettingsBtn {
 	background: var(--bg-secondary);
 	border: 1px solid var(--border);
 	box-shadow: var(--shadow-sm);
 	transition: all 0.2s ease;
 }
+
 #openSettingsBtn:hover {
 	background: var(--bg-tertiary);
 	border-color: var(--border-hover);
 	transform: translateY(-1px);
 }
+
 *::before,
 *::after {
 	box-sizing: border-box;
 }
+
 html,
 body {
 	height: 100vh;
@@ -588,19 +668,23 @@ body {
 	display: flex;
 	flex-direction: column;
 }
+
 body.nweroStyle,
 html.nweroStyle {
 	background: var(--background);
 }
+
 .header h1 {
 	margin: 0;
 }
+
 .glass {
 	background: var(--glass-bg);
 	backdrop-filter: blur(10px);
 	-webkit-backdrop-filter: blur(10px);
 	border: 1px solid var(--glass-border);
 }
+
 .btn {
 	position: relative;
 	display: inline-flex;
@@ -617,6 +701,7 @@ html.nweroStyle {
 	outline: 1px;
 	overflow: hidden;
 }
+
 .btn::before {
 	content: "";
 	position: absolute;
@@ -628,29 +713,35 @@ html.nweroStyle {
 	transform: translateX(-100%);
 	transition: transform 0.3s ease;
 }
+
 .btn:hover::before {
 	transform: translateX(100%);
 }
+
 .btn-primary {
 	background: linear-gradient(135deg, var(--accent) 0, var(--accent-hover) 100%);
 	color: #fff;
 	box-shadow: var(--shadow-md);
 }
+
 .btn-primary:hover {
 	transform: translateY(-1px);
 	box-shadow: var(--shadow-lg);
 }
+
 .btn-secondary {
 	background: var(--bg-secondary);
 	color: var(--text-primary);
 	border: 1px solid var(--border);
 	box-shadow: var(--shadow-sm);
 }
+
 .btn-secondary:hover {
 	background: var(--bg-tertiary);
 	border-color: var(--border-hover);
 	transform: translateY(-1px);
 }
+
 .panel {
 	background: var(--panel-bg);
 	border-radius: var(--radius-lg);
@@ -658,12 +749,14 @@ html.nweroStyle {
 	border: 1px solid var(--border);
 	box-shadow: var(--shadow-sm);
 }
+
 .btn-icon {
 	width: 2.5rem;
 	height: 2.5rem;
 	padding: 0;
 	border-radius: var(--radius-lg);
 }
+
 .header {
 	background: var(--glass-bg);
 	backdrop-filter: blur(20px);
@@ -676,6 +769,7 @@ html.nweroStyle {
 	align-items: center;
 	justify-content: space-between;
 }
+
 .header::before {
 	content: "";
 	position: absolute;
@@ -688,6 +782,7 @@ html.nweroStyle {
 	animation: gradient-shift 3s ease-in-out infinite;
 	opacity: 0.05;
 }
+
 @keyframes gradient-shift {
 
 	0%,
@@ -699,6 +794,7 @@ html.nweroStyle {
 		background-position: 100% 50%;
 	}
 }
+
 .header h1 {
 	background: linear-gradient(135deg, var(--accent), var(--accent-hover));
 	-webkit-background-clip: text;
@@ -710,6 +806,7 @@ html.nweroStyle {
 	letter-spacing: -0.025em;
 	z-index: 10 !important;
 }
+
 .left-panel {
 	width: 400px;
 	min-width: 300px;
@@ -725,6 +822,7 @@ html.nweroStyle {
 	overflow-y: auto;
 	position: relative;
 }
+
 .panel-section {
 	background: var(--bg-tertiary);
 	border-radius: 1rem;
@@ -732,10 +830,12 @@ html.nweroStyle {
 	border: 1px solid var(--border);
 	transition: all 0.2s ease;
 }
+
 .panel-section:hover {
 	border-color: var(--border-hover);
 	transform: translateY(-1px);
 }
+
 .section-title {
 	font-size: 0.875rem;
 	font-weight: 600;
@@ -747,6 +847,7 @@ html.nweroStyle {
 	align-items: center;
 	gap: 0.5rem;
 }
+
 .panel-section.pixel-log-section {
 	flex: 1;
 	display: flex;
@@ -754,6 +855,7 @@ html.nweroStyle {
 	min-height: 0;
 	margin-bottom: 0;
 }
+
 .live-view-container {
 	aspect-ratio: 1;
 	background: var(--bg-primary);
@@ -763,6 +865,7 @@ html.nweroStyle {
 	transition: all 0.3s ease;
 	position: relative;
 }
+
 .live-view-container::before {
 	content: "";
 	position: absolute;
@@ -778,15 +881,18 @@ html.nweroStyle {
 	z-index: -1;
 	animation: gradient-border 3s ease infinite;
 }
+
 .live-view-container:hover::before {
 	opacity: 0.3;
 }
+
 /* Scale the preview canvas to match its container dimensions */
 .live-view-container>canvas {
 	width: 100%;
 	height: 100%;
 	display: block;
 }
+
 @keyframes gradient-border {
 
 	0%,
@@ -798,6 +904,7 @@ html.nweroStyle {
 		background-position: 100% 50%;
 	}
 }
+
 #neuroCanvas,
 #neuroHighlightCanvas {
 	width: 100%;
@@ -810,13 +917,16 @@ html.nweroStyle {
 	left: 0;
 	image-rendering: pixelated;
 }
+
 #neuroCanvas:active {
 	cursor: grabbing;
 }
+
 #neuroHighlightCanvas {
 	pointer-events: none;
 	z-index: 1;
 }
+
 .footer {
 	background: var(--glass-bg);
 	backdrop-filter: blur(1px);
@@ -826,6 +936,7 @@ html.nweroStyle {
 	position: relative;
 	z-index: 10;
 }
+
 .controls-container {
 	display: flex;
 	align-items: center;
@@ -833,6 +944,7 @@ html.nweroStyle {
 	gap: 1.5rem;
 	flex-wrap: nowrap;
 }
+
 .control-group {
 	display: flex;
 	align-items: center;
@@ -844,15 +956,18 @@ html.nweroStyle {
 	box-shadow: var(--shadow-sm);
 	transition: all 0.2s ease;
 }
+
 .control-group:hover {
 	box-shadow: var(--shadow-md);
 	transform: translateY(-1px);
 }
+
 .control-label {
 	font-size: 0.875rem;
 	font-weight: 500;
 	color: var(--text-secondary);
 }
+
 .color-picker-wrapper {
 	position: relative;
 	width: 3rem;
@@ -863,10 +978,12 @@ html.nweroStyle {
 	transition: all 0.2s ease;
 	cursor: pointer;
 }
+
 .color-picker-wrapper:hover {
 	transform: scale(1.05);
 	border-color: var(--accent);
 }
+
 #colorPicker {
 	position: absolute;
 	top: 0;
@@ -877,6 +994,7 @@ html.nweroStyle {
 	cursor: pointer;
 	transform: translate(-15%, -15%);
 }
+
 .coords-display {
 	font-family: "JetBrains Mono", monospace;
 	font-size: 0.875rem;
@@ -887,6 +1005,7 @@ html.nweroStyle {
 	border-radius: 0.5rem;
 	border: 1px solid var(--border);
 }
+
 .credits {
 	position: absolute;
 	right: 1.5rem;
@@ -895,14 +1014,17 @@ html.nweroStyle {
 	color: var(--text-muted);
 	text-align: right;
 }
+
 .credits a {
 	color: var(--accent);
 	text-decoration: none;
 	transition: color 0.2s ease;
 }
+
 .credits a:hover {
 	color: var(--accent-hover);
 }
+
 .main-content {
 	flex: 1;
 	padding: 1.5rem;
@@ -912,6 +1034,7 @@ html.nweroStyle {
 	justify-content: center;
 	align-items: center;
 }
+
 .canvas-container {
 	position: relative;
 	height: auto;
@@ -923,35 +1046,43 @@ html.nweroStyle {
 	overflow: hidden;
 	transition: all 0.3s ease;
 }
+
 /* Ensure canvases fill their container */
 .canvas-container>canvas {
 	width: 100%;
 	height: 100%;
 	display: flex;
 }
+
 .flex-container {
 	flex: 1;
 	display: flex;
 	min-height: 0;
 	overflow: hidden;
 }
+
 ::-webkit-scrollbar {
 	width: 6px;
 }
+
 ::-webkit-scrollbar-track {
 	background: 0 0;
 }
+
 ::-webkit-scrollbar-thumb {
 	background: var(--border);
 	border-radius: 3px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
 	background: var(--border-hover);
 }
+
 .btn:focus-visible {
 	outline: 2px solid var(--accent);
 	outline-offset: 2px;
 }
+
 .modal-overlay {
 	position: fixed;
 	top: 0;
@@ -968,10 +1099,12 @@ html.nweroStyle {
 	transition: opacity 0.3s ease,
 		visibility 0.3s ease;
 }
+
 .modal-overlay.active {
 	opacity: 1;
 	visibility: visible;
 }
+
 .settings-window {
 	background-color: var(--bg-secondary);
 	color: var(--text-primary);
@@ -988,10 +1121,12 @@ html.nweroStyle {
 		opacity 0.3s ease-out;
 	border: 1px solid var(--border);
 }
+
 .modal-overlay.active .settings-window {
 	transform: translateY(0);
 	opacity: 1;
 }
+
 .close-button {
 	position: absolute;
 	top: 12px;
@@ -1006,10 +1141,12 @@ html.nweroStyle {
 	transition: background-color 0.2s ease,
 		color 0.2s ease;
 }
+
 .close-button:hover {
 	background-color: var(--bg-tertiary);
 	color: var(--text-primary);
 }
+
 .setting-item {
 	display: flex;
 	justify-content: space-between;
@@ -1017,20 +1154,24 @@ html.nweroStyle {
 	padding: 10px 0;
 	border-bottom: 1px solid var(--border);
 }
+
 .setting-item:last-child {
 	border-bottom: none;
 }
+
 .switch {
 	position: relative;
 	display: inline-block;
 	width: 40px;
 	height: 20px;
 }
+
 .switch input {
 	opacity: 0;
 	width: 0;
 	height: 0;
 }
+
 .slider {
 	position: absolute;
 	cursor: pointer;
@@ -1042,6 +1183,7 @@ html.nweroStyle {
 	transition: 0.4s;
 	border-radius: 20px;
 }
+
 .slider:before {
 	position: absolute;
 	content: "";
@@ -1053,12 +1195,15 @@ html.nweroStyle {
 	transition: 0.4s;
 	border-radius: 50%;
 }
+
 input:checked+.slider {
 	background-color: var(--success);
 }
+
 input:checked+.slider:before {
 	transform: translateX(20px);
 }
+
 .settings-window input[type="text"],
 .settings-window select {
 	background-color: var(--bg-tertiary);
@@ -1069,12 +1214,14 @@ input:checked+.slider:before {
 	font-size: 0.875rem;
 	transition: all 0.2s ease;
 }
+
 .settings-window input[type="text"]:focus,
 .settings-window select:focus {
 	outline: 0;
 	border-color: var(--accent);
 	box-shadow: var(--shadow-outline);
 }
+
 .settings-window input[type="range"] {
 	width: 100%;
 	height: 8px;
@@ -1083,9 +1230,10 @@ input:checked+.slider:before {
 	outline: 0;
 	transition: background 0.2s ease;
 }
+
 .settings-window input[type="range"]::-webkit-slider-thumb {
 	-webkit-appearance: none;
-	        appearance: none;
+	appearance: none;
 	width: 18px;
 	height: 18px;
 	border-radius: 50%;
@@ -1093,6 +1241,7 @@ input:checked+.slider:before {
 	cursor: pointer;
 	box-shadow: var(--shadow-outline);
 }
+
 .settings-window input[type="range"]::-moz-range-thumb {
 	width: 18px;
 	height: 18px;
@@ -1101,6 +1250,7 @@ input:checked+.slider:before {
 	cursor: pointer;
 	box-shadow: var(--shadow-outline);
 }
+
 @media (max-width: 768px) {
 
 	.coords-display,
@@ -1127,6 +1277,7 @@ input:checked+.slider:before {
 		justify-content: flex-start;
 	}
 }
+
 .connection-status {
 	display: inline-flex;
 	align-items: center;
@@ -1140,29 +1291,35 @@ input:checked+.slider:before {
 	transition: all 0.2s ease;
 	cursor: help;
 }
+
 .connection-status.connected {
 	background-color: var(--success);
 	color: white;
 }
+
 .connection-status.disconnected {
 	background-color: var(--error);
 	color: white;
 }
+
 .connection-status:hover {
 	transform: scale(1.1);
 	min-width: 100px;
 	transition: all 0.3s ease;
 }
+
 .connection-status.connected:hover::after {
 	content: "Connected";
 	margin-left: 8px;
 	font-size: 11px;
 }
+
 .connection-status.disconnected:hover::after {
 	content: "Disconnected";
 	margin-left: 8px;
 	font-size: 11px;
 }
+
 .countdown-timer-overlay,
 .timer-background-container {
 	position: fixed;
@@ -1174,10 +1331,12 @@ input:checked+.slider:before {
 	pointer-events: none;
 	overflow: hidden;
 }
+
 .countdown-timer-overlay.active,
 .timer-background-container {
 	pointer-events: all;
 }
+
 .timer-background,
 .countdown-timer-overlay .timer-background {
 	width: 100%;
@@ -1186,6 +1345,7 @@ input:checked+.slider:before {
 	position: relative;
 	overflow: hidden;
 }
+
 .timer-container {
 	color: var(--text-primary);
 	margin: 0 auto;
@@ -1202,6 +1362,7 @@ input:checked+.slider:before {
 	box-sizing: border-box;
 	font-family: "First Coffee", serif;
 }
+
 .timer-container h1 {
 	font-weight: normal;
 	letter-spacing: 0.125rem;
@@ -1209,6 +1370,7 @@ input:checked+.slider:before {
 	font-size: 2rem;
 	margin: 0 0 1rem 0;
 }
+
 .timer-container ul {
 	list-style: none;
 	padding: 0;
@@ -1217,6 +1379,7 @@ input:checked+.slider:before {
 	justify-content: center;
 	gap: 1rem;
 }
+
 .timer-container li {
 	display: inline-block;
 	font-size: 1.5em;
@@ -1224,19 +1387,23 @@ input:checked+.slider:before {
 	padding: 1em;
 	text-transform: uppercase;
 }
+
 .timer-emoji {
 	display: none;
 	padding: 1rem;
 }
+
 .timer-emoji span {
 	font-size: 4rem;
 	padding: 0 0.5rem;
 }
+
 .timer-container li span {
 	display: block;
 	font-size: 4.5rem;
 	font-weight: bold;
 }
+
 .timer-background .star-container {
 	position: absolute;
 	top: var(--start-top);
@@ -1249,6 +1416,7 @@ input:checked+.slider:before {
 	justify-content: center;
 	align-items: center;
 }
+
 .timer-background .cog-container {
 	position: absolute;
 	top: var(--start-top);
@@ -1262,6 +1430,7 @@ input:checked+.slider:before {
 	animation: cog-fade-in 1.2s ease-in forwards;
 	z-index: 3;
 }
+
 @keyframes cog-rotation {
 	0% {
 		transform: rotate(0deg);
@@ -1271,6 +1440,7 @@ input:checked+.slider:before {
 		transform: rotate(360deg);
 	}
 }
+
 @keyframes cog-fade-in {
 	0% {
 		opacity: 0;
@@ -1280,6 +1450,7 @@ input:checked+.slider:before {
 		opacity: 1;
 	}
 }
+
 .timer-background .cog-object {
 	width: 100%;
 	height: 100%;
@@ -1291,6 +1462,7 @@ input:checked+.slider:before {
 	animation: cog-rotation 12s linear infinite;
 	will-change: transform;
 }
+
 .timer-background .star-icon {
 	color: var(--star-color, white);
 	font-size: var(--star-size, 20px);
@@ -1298,6 +1470,7 @@ input:checked+.slider:before {
 	line-height: 1;
 	z-index: 2;
 }
+
 .timer-background .star-container::before {
 	content: "";
 	position: absolute;
@@ -1312,6 +1485,7 @@ input:checked+.slider:before {
 	z-index: 0;
 	border-radius: 1px;
 }
+
 .timer-background .star-container::after {
 	content: "★";
 	position: absolute;
@@ -1321,6 +1495,7 @@ input:checked+.slider:before {
 	line-height: 1;
 	z-index: 2;
 }
+
 @keyframes timer-star-fall {
 	0% {
 		transform: translate(0, 0) rotate(45deg);
@@ -1343,6 +1518,7 @@ input:checked+.slider:before {
 		opacity: 0;
 	}
 }
+
 @keyframes timer-trail-grow {
 	0% {
 		width: 0;
@@ -1364,6 +1540,7 @@ input:checked+.slider:before {
 		opacity: 0;
 	}
 }
+
 @media (max-width: 768px) {
 	.timer-container {
 		width: 90vw;
@@ -1383,11 +1560,13 @@ input:checked+.slider:before {
 		font-size: calc(3.375rem * 0.8);
 	}
 }
+
 .timer .cog-container {
 	position: absolute;
 	animation: rotateCog 20s linear infinite;
 	z-index: 2;
 }
+
 @keyframes rotateCog {
 	from {
 		transform: rotate(0deg);
@@ -1397,6 +1576,7 @@ input:checked+.slider:before {
 		transform: rotate(360deg);
 	}
 }
+
 .star {
 	position: absolute;
 	width: 25px;
@@ -1408,6 +1588,7 @@ input:checked+.slider:before {
 	align-items: center;
 	justify-content: center;
 }
+
 .star::before {
 	content: "★";
 	color: #fff;
@@ -1417,6 +1598,7 @@ input:checked+.slider:before {
 	position: relative;
 	z-index: 2;
 }
+
 .star::after {
 	content: "";
 	position: absolute;
@@ -1433,6 +1615,7 @@ input:checked+.slider:before {
 	z-index: 1;
 	border-radius: 2px;
 }
+
 @keyframes fallingStar {
 	0% {
 		transform: translate(0, 0);
@@ -1445,6 +1628,7 @@ input:checked+.slider:before {
 		opacity: 0;
 	}
 }
+
 @keyframes starTwinkle {
 	0% {
 		opacity: 0.4;
@@ -1471,6 +1655,7 @@ input:checked+.slider:before {
 		transform: scale(1.2);
 	}
 }
+
 .timer .settings-panel {
 	position: fixed;
 	top: 20px;
@@ -1482,20 +1667,23 @@ input:checked+.slider:before {
 	z-index: 100;
 	min-width: 250px;
 	-webkit-backdrop-filter: blur(10px);
-	        backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
 }
+
 .timer .settings-panel h3 {
 	margin: 0 0 15px 0;
 	color: var(--text-primary);
 	font-family: "First Coffee", cursive, sans-serif;
 	font-size: 1.2rem;
 }
+
 .timer .settings-panel label {
 	display: block;
 	margin-bottom: 5px;
 	color: var(--text-secondary);
 	font-weight: 500;
 }
+
 .timer .settings-panel input,
 .timer .settings-panel select {
 	width: 100%;
@@ -1507,11 +1695,13 @@ input:checked+.slider:before {
 	background: var(--bg-tertiary);
 	color: var(--text-primary);
 }
+
 .timer .settings-panel input:focus,
 .timer .settings-panel select:focus {
 	outline: none;
 	border-color: var(--accent);
 }
+
 .timer .settings-panel button {
 	background: var(--accent);
 	color: white;
@@ -1523,9 +1713,11 @@ input:checked+.slider:before {
 	margin-right: 5px;
 	transition: background 0.2s ease;
 }
+
 .timer .settings-panel button:hover {
 	background: var(--accent-hover);
 }
+
 .timer .settings-toggle {
 	position: fixed;
 	top: 20px;
@@ -1539,19 +1731,24 @@ input:checked+.slider:before {
 	box-shadow: var(--shadow-sm);
 	transition: background 0.2s ease;
 }
+
 .dark .timer .settings-toggle {
 	background: rgba(26, 26, 46, 0.9);
 	color: var(--text-primary);
 }
+
 .timer .settings-toggle:hover {
 	background: rgba(255, 255, 255, 1);
 }
+
 .dark .timer .settings-toggle:hover {
 	background: rgba(26, 26, 46, 1);
 }
+
 .timer .settings-panel.hidden {
 	display: none;
 }
+
 .timer body {
 	min-height: 100vh;
 	background: linear-gradient(135deg,
@@ -1559,9 +1756,11 @@ input:checked+.slider:before {
 			var(--bg-secondary, #ff6699) 100%);
 	overflow: hidden;
 }
+
 .timer.nweroStyle body {
 	background: var(--background);
 }
+
 .timer .container {
 	position: relative;
 	z-index: 10;
@@ -1571,6 +1770,7 @@ input:checked+.slider:before {
 	justify-content: center;
 	min-height: 100vh;
 }
+
 .timer #headline {
 	font-family: "First Coffee", cursive, sans-serif;
 	font-size: 2.2rem;
@@ -1581,6 +1781,7 @@ input:checked+.slider:before {
 	text-shadow: 2px 2px 0 #fff8,
 		0 2px 8px #fff4;
 }
+
 .timer #countdown ul {
 	display: flex;
 	gap: 2.5rem;
@@ -1588,6 +1789,7 @@ input:checked+.slider:before {
 	padding: 0;
 	margin: 0;
 }
+
 .timer #countdown li {
 	display: flex;
 	flex-direction: column;
@@ -1597,6 +1799,7 @@ input:checked+.slider:before {
 	color: var(--text-primary);
 	text-shadow: 1px 1px 0 #fff8;
 }
+
 .timer #countdown li span {
 	font-size: 3.5rem;
 	font-weight: bold;
@@ -1605,12 +1808,14 @@ input:checked+.slider:before {
 	text-shadow: 2px 2px 0 #fff8,
 		0 2px 8px #fff4;
 }
+
 .timer .background {
 	position: fixed;
 	inset: 0;
 	z-index: 1;
 	pointer-events: none;
 }
+
 @media (max-width: 768px) {
 	.timer #headline {
 		font-size: 1.2rem;
@@ -1624,6 +1829,7 @@ input:checked+.slider:before {
 		gap: 1.2rem;
 	}
 }
+
 .timer-background .star-icon {
 	color: var(--star-color, white);
 	font-size: var(--star-size, 20px);
@@ -1631,6 +1837,7 @@ input:checked+.slider:before {
 	line-height: 1;
 	z-index: 2;
 }
+
 .timer-background .star-container::before {
 	content: "";
 	position: absolute;
@@ -1645,6 +1852,7 @@ input:checked+.slider:before {
 	z-index: 0;
 	border-radius: 1px;
 }
+
 .timer-background .star-container::after {
 	content: "★";
 	position: absolute;
@@ -1654,6 +1862,7 @@ input:checked+.slider:before {
 	line-height: 1;
 	z-index: 2;
 }
+
 @keyframes timer-star-fall {
 	0% {
 		transform: translate(0, 0) rotate(45deg);
@@ -1676,6 +1885,7 @@ input:checked+.slider:before {
 		opacity: 0;
 	}
 }
+
 @keyframes timer-trail-grow {
 	0% {
 		width: 0;
@@ -1697,6 +1907,7 @@ input:checked+.slider:before {
 		opacity: 0;
 	}
 }
+
 @media (max-width: 768px) {
 	.timer-container {
 		width: 90vw;
@@ -1716,11 +1927,13 @@ input:checked+.slider:before {
 		font-size: calc(3.375rem * 0.8);
 	}
 }
+
 .timer .cog-container {
 	position: absolute;
 	animation: rotateCog 20s linear infinite;
 	z-index: 2;
 }
+
 @keyframes rotateCog {
 	from {
 		transform: rotate(0deg);
@@ -1730,6 +1943,7 @@ input:checked+.slider:before {
 		transform: rotate(360deg);
 	}
 }
+
 .star {
 	position: absolute;
 	width: 25px;
@@ -1741,6 +1955,7 @@ input:checked+.slider:before {
 	align-items: center;
 	justify-content: center;
 }
+
 .star::before {
 	content: "★";
 	color: #fff;
@@ -1750,6 +1965,7 @@ input:checked+.slider:before {
 	position: relative;
 	z-index: 2;
 }
+
 .star::after {
 	content: "";
 	position: absolute;
@@ -1766,6 +1982,7 @@ input:checked+.slider:before {
 	z-index: 1;
 	border-radius: 2px;
 }
+
 @keyframes fallingStar {
 	0% {
 		transform: translate(0, 0);
@@ -1778,6 +1995,7 @@ input:checked+.slider:before {
 		opacity: 0;
 	}
 }
+
 @keyframes starTwinkle {
 	0% {
 		opacity: 0.4;
@@ -1804,6 +2022,7 @@ input:checked+.slider:before {
 		transform: scale(1.2);
 	}
 }
+
 .timer .settings-panel {
 	position: fixed;
 	top: 20px;
@@ -1815,20 +2034,23 @@ input:checked+.slider:before {
 	z-index: 100;
 	min-width: 250px;
 	-webkit-backdrop-filter: blur(10px);
-	        backdrop-filter: blur(10px);
+	backdrop-filter: blur(10px);
 }
+
 .timer .settings-panel h3 {
 	margin: 0 0 15px 0;
 	color: var(--text-primary);
 	font-family: "First Coffee", cursive, sans-serif;
 	font-size: 1.2rem;
 }
+
 .timer .settings-panel label {
 	display: block;
 	margin-bottom: 5px;
 	color: var(--text-secondary);
 	font-weight: 500;
 }
+
 .timer .settings-panel input,
 .timer .settings-panel select {
 	width: 100%;
@@ -1840,11 +2062,13 @@ input:checked+.slider:before {
 	background: var(--bg-tertiary);
 	color: var(--text-primary);
 }
+
 .timer .settings-panel input:focus,
 .timer .settings-panel select:focus {
 	outline: none;
 	border-color: var(--accent);
 }
+
 .timer .settings-panel button {
 	background: var(--accent);
 	color: white;
@@ -1856,9 +2080,11 @@ input:checked+.slider:before {
 	margin-right: 5px;
 	transition: background 0.2s ease;
 }
+
 .timer .settings-panel button:hover {
 	background: var(--accent-hover);
 }
+
 .timer .settings-toggle {
 	position: fixed;
 	top: 20px;
@@ -1872,19 +2098,24 @@ input:checked+.slider:before {
 	box-shadow: var(--shadow-sm);
 	transition: background 0.2s ease;
 }
+
 .dark .timer .settings-toggle {
 	background: rgba(26, 26, 46, 0.9);
 	color: var(--text-primary);
 }
+
 .timer .settings-toggle:hover {
 	background: rgba(255, 255, 255, 1);
 }
+
 .dark .timer .settings-toggle:hover {
 	background: rgba(26, 26, 46, 1);
 }
+
 .timer .settings-panel.hidden {
 	display: none;
 }
+
 .timer body {
 	min-height: 100vh;
 	background: linear-gradient(135deg,
@@ -1892,9 +2123,11 @@ input:checked+.slider:before {
 			var(--bg-secondary, #ff6699) 100%);
 	overflow: hidden;
 }
+
 .timer.nweroStyle body {
 	background: var(--background);
 }
+
 .timer .container {
 	position: relative;
 	z-index: 10;
@@ -1904,6 +2137,7 @@ input:checked+.slider:before {
 	justify-content: center;
 	min-height: 100vh;
 }
+
 .timer #headline {
 	font-family: "First Coffee", cursive, sans-serif;
 	font-size: 2.2rem;
@@ -1914,6 +2148,7 @@ input:checked+.slider:before {
 	text-shadow: 2px 2px 0 #fff8,
 		0 2px 8px #fff4;
 }
+
 .timer #countdown ul {
 	display: flex;
 	gap: 2.5rem;
@@ -1921,6 +2156,7 @@ input:checked+.slider:before {
 	padding: 0;
 	margin: 0;
 }
+
 .timer #countdown li {
 	display: flex;
 	flex-direction: column;
@@ -1930,6 +2166,7 @@ input:checked+.slider:before {
 	color: var(--text-primary);
 	text-shadow: 1px 1px 0 #fff8;
 }
+
 .timer #countdown li span {
 	font-size: 3.5rem;
 	font-weight: bold;
@@ -1938,12 +2175,14 @@ input:checked+.slider:before {
 	text-shadow: 2px 2px 0 #fff8,
 		0 2px 8px #fff4;
 }
+
 .timer .background {
 	position: fixed;
 	inset: 0;
 	z-index: 1;
 	pointer-events: none;
 }
+
 @media (max-width: 768px) {
 	.timer #headline {
 		font-size: 1.2rem;
