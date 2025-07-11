@@ -77,6 +77,33 @@
 	transform: translateY(-1px);
 }
 
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	height: 100vh;
+	overflow: hidden;
+	font-family: Inter, sans-serif;
+	background: var(--bg-primary);
+	color: var(--text-primary);
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+body.nweroStyle,
+html.nweroStyle {
+	background: var(--background);
+}
+
+.header h1 {
+	margin: 0;
+}
+
+
 .glass {
 	background: var(--glass-bg);
 	backdrop-filter: blur(10px);
@@ -333,7 +360,6 @@
 	border-top: 1px solid var(--border);
 	padding: 1rem !important;
 	position: relative;
-	bottom: 20px;
 	z-index: 10;
 }
 

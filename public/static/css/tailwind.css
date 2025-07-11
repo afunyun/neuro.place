@@ -529,6 +529,7 @@ input:where([type='button'], [type='reset'], [type='submit']),
 		flex-shrink: 0 !important;
 		position: relative !important;
 		z-index: 10 !important;
+		cursor: pointer;
 	}
 
 	#openSettingsBtn img {
@@ -539,10 +540,60 @@ input:where([type='button'], [type='reset'], [type='submit']),
 		border-radius: inherit;
 	}
 }
-#adminToggleBtn,
-#openSettingsBtn,
 #privacyStatementBtn {
-	cursor: pointer;
+	background: var(--bg-secondary);
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow-sm);
+	transition: all 0.2s ease;
+}
+#privacyStatementBtn:hover {
+	background: var(--bg-tertiary);
+	border-color: var(--border-hover);
+	transform: translateY(-1px);
+}
+#adminToggleBtn {
+	background: var(--bg-secondary);
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow-sm);
+	transition: all 0.2s ease;
+}
+#adminToggleBtn:hover {
+	background: var(--bg-tertiary);
+	border-color: var(--border-hover);
+	transform: translateY(-1px);
+}
+#openSettingsBtn {
+	background: var(--bg-secondary);
+	border: 1px solid var(--border);
+	box-shadow: var(--shadow-sm);
+	transition: all 0.2s ease;
+}
+#openSettingsBtn:hover {
+	background: var(--bg-tertiary);
+	border-color: var(--border-hover);
+	transform: translateY(-1px);
+}
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+html,
+body {
+	height: 100vh;
+	overflow: hidden;
+	font-family: Inter, sans-serif;
+	background: var(--bg-primary);
+	color: var(--text-primary);
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+}
+body.nweroStyle,
+html.nweroStyle {
+	background: var(--background);
+}
+.header h1 {
+	margin: 0;
 }
 .glass {
 	background: var(--glass-bg);
@@ -773,7 +824,6 @@ input:where([type='button'], [type='reset'], [type='submit']),
 	border-top: 1px solid var(--border);
 	padding: 1rem !important;
 	position: relative;
-	bottom: 20px;
 	z-index: 10;
 }
 .controls-container {
