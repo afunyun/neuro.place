@@ -276,7 +276,7 @@ export class GridDurableObject {
 				if (info?.isAdmin) {
 					this.adminSessions.add(ws);
 				}
-			} catch {}
+			} catch { }
 		}
 	}
 
@@ -1135,7 +1135,7 @@ export class GridDurableObject {
 							if (Array.isArray(parsed) && parsed.length === chunkSize) {
 								chunkData = parsed;
 							}
-						} catch {}
+						} catch { }
 					}
 					if (!chunkData) {
 						chunkData = Array(chunkSize)
@@ -1246,8 +1246,8 @@ export class GridDurableObject {
 				const requesterKey = user
 					? user.id
 					: request.headers.get("x-session-id") ||
-						request.headers.get("cf-connecting-ip") ||
-						"anonymous";
+					request.headers.get("cf-connecting-ip") ||
+					"anonymous";
 				const nowTs = Date.now();
 				if (!this.isAdmin(requesterKey)) {
 					const lastTs = this.lastPlacementByUser.get(requesterKey) || 0;
@@ -1276,7 +1276,7 @@ export class GridDurableObject {
 							if (Array.isArray(parsed) && parsed.length === 50) {
 								chunkArr = parsed;
 							}
-						} catch {}
+						} catch { }
 					}
 					if (!chunkArr) {
 						chunkArr = Array(50)
@@ -1311,8 +1311,8 @@ export class GridDurableObject {
 					sessionId: user
 						? user.id
 						: requestData.sessionId ||
-							request.headers.get("x-session-id") ||
-							"anonymous",
+						request.headers.get("x-session-id") ||
+						"anonymous",
 					inputMethod:
 						requestData.inputMethod ||
 						request.headers.get("x-input-method") ||
@@ -1661,7 +1661,7 @@ export class GridDurableObject {
 							if (Array.isArray(parsed) && parsed.length === chunkSize) {
 								chunkData = parsed;
 							}
-						} catch {}
+						} catch { }
 					}
 					if (!chunkData) {
 						chunkData = Array(chunkSize)
@@ -1694,7 +1694,7 @@ export class GridDurableObject {
 								if (Array.isArray(parsed) && parsed.length === chunkSize) {
 									chunkData = parsed;
 								}
-							} catch {}
+							} catch { }
 						}
 						if (!chunkData) {
 							chunkData = Array(chunkSize)
@@ -2050,7 +2050,7 @@ export class GridDurableObject {
 								if (Array.isArray(parsed) && parsed.length === 50) {
 									chunkArr = parsed;
 								}
-							} catch {}
+							} catch { }
 						}
 						if (!chunkArr) {
 							chunkArr = Array(50)
@@ -2148,7 +2148,7 @@ export class GridDurableObject {
 					this.adminSessions.add(ws);
 					try {
 						ws.serializeAttachment?.({ isAdmin: true, user: user.username });
-					} catch {}
+					} catch { }
 					this.logToConsole(
 						"info",
 						`Admin console connected: ${user.username}`,
@@ -2162,7 +2162,7 @@ export class GridDurableObject {
 				this.adminSessions.delete(ws);
 				return;
 			}
-		} catch {}
+		} catch { }
 	}
 
 	async webSocketClose(ws) {
@@ -2180,7 +2180,7 @@ export class GridDurableObject {
 		for (const ws of this.state.getWebSockets()) {
 			try {
 				ws.send(messageStr);
-			} catch {}
+			} catch { }
 		}
 	}
 
@@ -2214,7 +2214,7 @@ export class GridDurableObject {
 		for (const ws of targets) {
 			try {
 				ws.send(messageStr);
-			} catch {}
+			} catch { }
 		}
 	}
 

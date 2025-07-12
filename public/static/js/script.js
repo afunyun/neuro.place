@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	let userData = JSON.parse(localStorage.getItem("user_data") || "null");
 
 	window.initiateDiscordOAuth = () => initiateDiscordOAuth();
-	window.logout = () => logout();
+	window.logout = async () => await logout();
 	window.handleOAuthCallback = () => handleOAuthCallback();
 
 	const GRID_WIDTH = 500;
@@ -498,7 +498,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					userData = data.user;
 					localStorage.setItem("discord_token", userToken);
 					localStorage.setItem("user_data", JSON.stringify(userData));
-					updateUserInterface();
+					await updateUserInterface();
 					window.history.replaceState(
 						{},
 						document.title,
@@ -511,12 +511,12 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
-	function logout() {
+	async function logout() {
 		userToken = null;
 		userData = null;
 		localStorage.removeItem("discord_token");
 		localStorage.removeItem("user_data");
-		updateUserInterface();
+		await updateUserInterface();
 
 		if (window.gridTender) {
 			window.gridTender.clearAuthState();
@@ -524,7 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
-	function updateUserInterface() {
+	async function updateUserInterface() {
 		const loginBtn = document.getElementById("discordLoginBtn");
 		const logoutBtn = document.getElementById("logoutBtn");
 		const userInfo = document.getElementById("userInfo");
@@ -545,12 +545,7 @@ document.addEventListener("DOMContentLoaded", () => {
 				}
 
 				if (!document.getElementById("cooldownToggleContainer")) {
-					const adminIds = [
-						"146797401720487936",
-						"405184938045079552",
-						"858231473761157170",
-					];
-					const isAdmin = adminIds.includes(userData.id);
+					const isAdmin = await window.adminService?.isCurrentUserAdmin();
 					if (isAdmin) {
 						enforceCooldown = false;
 					}
@@ -1010,7 +1005,13 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function handleKeyDown(event) {
+		// ignore keyboard events when typing in inputs, textareas, or contentEditable elements
+		const target = event.target;
+		if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+			return;
+		}
 		if (event.defaultPrevented) return;
+
 		switch (event.key) {
 			case "ArrowUp":
 				if (selectedPixel.y > 0) selectedPixel.y--;
@@ -1052,6 +1053,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			default:
 				return;
 		}
+
 		event.preventDefault();
 		if (selectedPixel.x === null || selectedPixel.y === null) {
 			selectedPixel.x = 0;
@@ -1748,7 +1750,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		document.addEventListener("keydown", handleKeyDown);
 
 		await handleOAuthCallback();
-		updateUserInterface();
+		await updateUserInterface();
 		initTheme();
 		initCollapsiblePanels();
 
@@ -1897,9 +1899,9 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 
 		initEventListeners() {
-			document.addEventListener("click", (e) => {
+			document.addEventListener("click", async (e) => {
 				if (e.target.id === "openConsoleWindowBtn") {
-					this.openConsoleWindow();
+					await this.openConsoleWindow();
 				}
 			});
 		}
@@ -1944,17 +1946,12 @@ document.addEventListener("DOMContentLoaded", () => {
 			this.centerWindow();
 		}
 
-		isUserAdmin(userId) {
-			const adminIds = [
-				"146797401720487936",
-				"405184938045079552",
-				"858231473761157170",
-			];
-			return adminIds.includes(userId);
+		async isUserAdmin(userId) {
+			return await window.adminService?.isUserAdmin(userId);
 		}
 
-		openConsoleWindow() {
-			if (!userData || !this.isUserAdmin(userData.id)) {
+		async openConsoleWindow() {
+			if (!userData || !(await this.isUserAdmin(userData.id))) {
 				return;
 			}
 

@@ -13,13 +13,15 @@ body {
 	max-width: 1200px;
 	margin: 0 auto;
 	padding: 20px;
-	visibility: visible; /* Changed from hidden to visible as fallback */
+	visibility: visible;
+	/* Changed from hidden to visible as fallback */
 	min-height: 100vh;
 }
 
 .dashboard-container.loaded {
 	visibility: visible;
 }
+
 .dashboard-header {
 	background: var(--bg-secondary);
 	padding: 20px;

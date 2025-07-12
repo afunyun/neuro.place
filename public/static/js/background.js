@@ -66,7 +66,7 @@ function generateRandomCogs(container, config = {}) {
 
 		const delay =
 			Math.random() *
-				(cogConfig.animationDelay.max - cogConfig.animationDelay.min) +
+			(cogConfig.animationDelay.max - cogConfig.animationDelay.min) +
 			cogConfig.animationDelay.min;
 
 		cog.style.cssText = `
@@ -126,7 +126,7 @@ function generateFallingStars(container, config = {}) {
 
 		const duration =
 			Math.random() *
-				(starConfig.animationDuration.max - starConfig.animationDuration.min) +
+			(starConfig.animationDuration.max - starConfig.animationDuration.min) +
 			starConfig.animationDuration.min;
 		const delay = Math.random() * duration;
 

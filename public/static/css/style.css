@@ -2,7 +2,6 @@
 @import "./_base.css";
 @import "./_utilities.css";
 /* biome-ignore lint/unknownAtRules */
-@import "tailwindcss/preflight";
 
 @font-face {
 	font-family: "First Coffee";
@@ -1559,63 +1558,4 @@ input:checked+.slider:before {
 	align-items: center;
 	justify-content: center;
 	min-height: 100vh;
-}
-
-.timer #headline {
-	font-family: "First Coffee", cursive, sans-serif;
-	font-size: 2.2rem;
-	color: var(--text-primary);
-	margin-bottom: 2rem;
-	text-align: center;
-	letter-spacing: 1px;
-	text-shadow: 2px 2px 0 #fff8,
-		0 2px 8px #fff4;
-}
-
-.timer #countdown ul {
-	display: flex;
-	gap: 2.5rem;
-	list-style: none;
-	padding: 0;
-	margin: 0;
-}
-
-.timer #countdown li {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	font-family: "First Coffee", cursive, sans-serif;
-	font-size: 1.3rem;
-	color: var(--text-primary);
-	text-shadow: 1px 1px 0 #fff8;
-}
-
-.timer #countdown li span {
-	font-size: 3.5rem;
-	font-weight: bold;
-	color: var(--text-primary);
-	margin-bottom: 0.2em;
-	text-shadow: 2px 2px 0 #fff8,
-		0 2px 8px #fff4;
-}
-
-.timer .background {
-	position: fixed;
-	inset: 0;
-	z-index: 1;
-	pointer-events: none;
-}
-
-@media (max-width: 768px) {
-	.timer #headline {
-		font-size: 1.2rem;
-	}
-
-	.timer #countdown li span {
-		font-size: 2.2rem;
-	}
-
-	.timer #countdown ul {
-		gap: 1.2rem;
-	}
 }
