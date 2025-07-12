@@ -1444,50 +1444,20 @@ document.addEventListener("DOMContentLoaded", () => {
 		cooldownTimerDiv.style.display = "block";
 	}
 
-	function toggleDark() {
-		console.log("Toggle dark mode called");
-		document.documentElement.classList.toggle("dark");
-		const isDark = document.documentElement.classList.contains("dark");
-		console.log("Dark mode is now:", isDark);
-		localStorage.setItem("theme", isDark ? "dark" : "light");
+	function setTheme(theme) {
+		document.documentElement.setAttribute('data-theme', theme);
+		localStorage.setItem('theme', theme);
 
-		const themeIcon = themeToggleBtn.querySelector(".material-icons-round");
-		if (themeIcon) {
-			themeIcon.textContent = isDark ? "light_mode" : "dark_mode";
-			console.log("Theme icon updated to:", themeIcon.textContent);
-		} else {
-			console.log("Theme icon element not found");
-		}
+		// Update active button state
+		const themeButtons = document.querySelectorAll('.theme-btn');
+		themeButtons.forEach(btn => {
+			btn.classList.toggle('active', btn.getAttribute('data-theme') === theme);
+		});
 	}
 
 	function initTheme() {
-		console.log("initTheme called");
-		const savedTheme = localStorage.getItem("theme");
-		console.log("Saved theme from localStorage:", savedTheme);
-
-		if (savedTheme === "dark") {
-			console.log("Applying dark theme");
-			document.documentElement.classList.add("dark");
-			const themeIcon = themeToggleBtn.querySelector(".material-icons-round");
-			if (themeIcon) {
-				themeIcon.textContent = "light_mode";
-				console.log("Theme icon set to light_mode");
-			} else {
-				console.log("Theme icon element not found in initTheme");
-			}
-		} else if (savedTheme === "light") {
-			console.log("Applying light theme");
-			document.documentElement.classList.remove("dark");
-			const themeIcon = themeToggleBtn.querySelector(".material-icons-round");
-			if (themeIcon) {
-				themeIcon.textContent = "dark_mode";
-				console.log("Theme icon set to dark_mode");
-			} else {
-				console.log("Theme icon element not found in initTheme");
-			}
-		} else {
-			console.log("No saved theme, using default");
-		}
+		const savedTheme = localStorage.getItem('theme') || 'light';
+		setTheme(savedTheme);
 	}
 
 	async function init() {
@@ -1600,9 +1570,14 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 		}
 
-		if (themeToggleBtn) {
-			themeToggleBtn.addEventListener("click", toggleDark);
-		}
+		// Set up theme buttons
+		const themeButtons = document.querySelectorAll('.theme-btn');
+		themeButtons.forEach(button => {
+			button.addEventListener('click', function() {
+				const theme = this.getAttribute('data-theme');
+				setTheme(theme);
+			});
+		});
 
 		// Sidebar functionality (works for both mobile and desktop)
 		function isMobileView() {

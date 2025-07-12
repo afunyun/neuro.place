@@ -24,7 +24,7 @@
 		"tailwindcss": "^4.1.11"
 	},
 	"peerDependencies": {
-		"typescript": "^5"
+		"typescript": "^5.8.3"
 	},
 	"dependencies": {
 		"@cloudflare/workerd-linux-64": "^1.20250701.0",

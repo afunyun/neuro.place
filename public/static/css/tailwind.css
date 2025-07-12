@@ -655,20 +655,21 @@ html.nweroStyle {
 	visibility: visible;
 }
 .settings-window {
-	background-color: var(--bg-secondary);
-	color: var(--text-primary);
-	border-radius: 12px;
-	padding: 24px;
-	box-shadow: var(--shadow-lg);
-	max-width: 90%;
-	width: 500px;
-	overflow-y: auto;
-	position: relative;
-	transform: translateY(20px);
-	opacity: 0;
-	transition: transform 0.3s ease-out,
-		opacity 0.3s ease-out;
-	border: 1px solid var(--border);
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: var(--shadow-lg);
+    max-width: 90%;
+    width: 500px;
+    min-height: 450px; /* Increased height */
+    overflow-y: auto;
+    position: relative;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform 0.3s ease-out,
+        opacity 0.3s ease-out;
+    border: 1px solid var(--border);
 }
 .modal-overlay.active .settings-window {
 	transform: translateY(0);
@@ -702,44 +703,32 @@ html.nweroStyle {
 .setting-item:last-child {
 	border-bottom: none;
 }
-.switch {
-	position: relative;
-	display: inline-block;
-	width: 40px;
-	height: 20px;
+/* Theme selector styles */
+.theme-toggle-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
 }
-.switch input {
-	opacity: 0;
-	width: 0;
-	height: 0;
+.theme-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
 }
-.slider {
-	position: absolute;
-	cursor: pointer;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: var(--text-muted);
-	transition: 0.4s;
-	border-radius: 20px;
+.theme-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
 }
-.slider:before {
-	position: absolute;
-	content: "";
-	height: 16px;
-	width: 16px;
-	left: 2px;
-	bottom: 2px;
-	background-color: var(--bg-primary);
-	transition: 0.4s;
-	border-radius: 50%;
-}
-input:checked+.slider {
-	background-color: var(--success);
-}
-input:checked+.slider:before {
-	transform: translateX(20px);
+.theme-btn:hover:not(.active) {
+    background: var(--bg-secondary);
+    transform: translateY(-2px);
 }
 .settings-window input[type="text"],
 .settings-window select {
