@@ -18,7 +18,7 @@
 </head>
 
 <body class="flex flex-col">
-    <header class="flex items-center justify-between px-8 py-4">
+    <header class="header" style="padding-left: 2rem; padding-right: 2rem;">
         <h1>Neuro.Place</h1>
 
         <div id="siteAnnouncement" class="site-announcement show absolute left-1/2 transform -translate-x-1/2"></div>
@@ -44,8 +44,8 @@
 
     </header>
 
-    <div class="flex flex-1">
-        <aside class="hidden md:block md:w-64 left-panel">
+    <div class="flex-container">
+        <aside class="left-panel">
             <div class="panel-section collapsible-panel" data-panel="liveView">
                 <h3 class="section-title collapsible-header">
                     <span class="material-icons-round" style="font-size: 1rem;">visibility</span>
@@ -93,7 +93,7 @@
 
         </aside>
 
-        <main class="flex-1 p-4 main-content" id="main-content">
+        <main class="main-content" id="main-content">
             <div class="canvas-container">
                 <canvas id="neuroCanvas"></canvas>
                 <canvas id="neuroHighlightCanvas"></canvas>
@@ -111,9 +111,7 @@
 
             <div class="space-y-4">
                 <div class="setting-item">
-                    <button id="discordLoginBtn"
-                        class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg transition bg-gradient-to-br from-accent to-accent-hover text-white shadow-md hover:shadow-lg hover:-translate-y-1 w-full">Login
-                        with Discord</button>
+                    <button id="discordLoginBtn" class="btn btn-primary w-full">Login with Discord</button>
                     <div id="userInfo" class="mt-4 hidden items-center space-x-2">
                         <div class="flex w-full items-center justify-between">
                             <div class="flex flex-col">
@@ -124,8 +122,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <button id="logoutBtn"
-                                class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition">
+                            <button id="logoutBtn" class="btn btn-danger">
                                 <span class="material-icons-round" style="font-size: 1rem;">logout</span>
                                 Logout
                             </button>
@@ -135,8 +132,7 @@
 
                 <div class="setting-item">
                     <label for="darkModeToggle" class="text-text-primary">Dark Mode Toggle</label>
-                    <button id="themeToggleBtn"
-                        class="inline-flex items-center justify-center p-0 w-10 h-10 rounded-lg bg-secondary text-primary border border-border shadow-sm hover:bg-tertiary hover:border-border-hover transform hover:-translate-y-1 transition"
+                    <button id="themeToggleBtn" class="btn btn-secondary btn-icon"
                         style="position: absolute; right: 21px; z-index: 10;" title="Toggle theme">
                         <span class="material-icons-round">light_mode</span>
                     </button>
@@ -310,8 +306,7 @@
                 <div class="color-picker-wrapper">
                     <input type="color" id="colorPicker" value="#000000">
                 </div>
-                <button id="placePixelBtn"
-                    class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg transition bg-gradient-to-br from-accent to-accent-hover text-white shadow-md hover:shadow-lg hover:-translate-y-1">
+                <button id="placePixelBtn" class="btn btn-primary">
                     <span class="material-icons-round" style="font-size: 1.125rem;">add</span>
                     Place Pixel
                 </button>
@@ -321,14 +316,10 @@
                 None</div>
 
             <div class="control-group zoom">
-                <button id="zoomOutBtn"
-                    class="inline-flex items-center justify-center p-0 w-10 h-10 rounded-lg bg-secondary text-primary border border-border shadow-sm hover:bg-tertiary hover:border-border-hover transform hover:-translate-y-1 transition zoom-out"
-                    title="Zoom out">
+                <button id="zoomOutBtn" class="btn btn-secondary btn-icon zoom-out" title="Zoom out">
                     <span class="material-icons-round">zoom_out</span>
                 </button>
-                <button id="zoomInBtn"
-                    class="inline-flex items-center justify-center p-0 w-10 h-10 rounded-lg bg-secondary text-primary border border-border shadow-sm hover:bg-tertiary hover:border-border-hover transform hover:-translate-y-1 transition zoom-in"
-                    title="Zoom in">
+                <button id="zoomInBtn" class="btn btn-secondary btn-icon zoom-in" title="Zoom in">
                     <span class="material-icons-round">zoom_in</span>
                 </button>
             </div>

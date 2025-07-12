@@ -1010,11 +1010,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function handleKeyDown(event) {
-		// ignore keyboard events when typing in inputs, textareas, or contentEditable elements
-		const target = event.target;
-		if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
-			return;
-		}
 		if (event.defaultPrevented) return;
 		switch (event.key) {
 			case "ArrowUp":
