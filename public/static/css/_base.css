@@ -1,0 +1,28 @@
+@layer base {
+
+	*,
+	*::before,
+	*::after {
+		box-sizing: border-box;
+	}
+
+	html,
+	body {
+		height: 100vh;
+		overflow: hidden;
+		font-family: Inter, sans-serif;
+		background: var(--bg-primary);
+		color: var(--text-primary);
+		margin: 0;
+		padding: 0px;
+	}
+
+	body.nweroStyle,
+	html.nweroStyle {
+		background: var(--background);
+	}
+
+	.header h1 {
+		margin: 0;
+	}
+}
