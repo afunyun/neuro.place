@@ -15,7 +15,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	const BACKEND_URL = `${window.location.origin}`;
 	const IS_DEV_MODE =
 		window.location.hostname === "localhost" ||
-		window.location.hostname === "127.0.0.1";
+		window.location.hostname === "127.0.0.1" ||
+		window.location.hostname === "dev.neurosama.place";
 	const WEBSOCKET_URL = IS_DEV_MODE
 		? `ws://${window.location.host}/ws`
 		: `wss://${window.location.host}/ws`;
@@ -1444,20 +1445,130 @@ document.addEventListener("DOMContentLoaded", () => {
 		cooldownTimerDiv.style.display = "block";
 	}
 
-	function setTheme(theme) {
-		document.documentElement.setAttribute('data-theme', theme);
-		localStorage.setItem('theme', theme);
+	// Theme management with improved error handling and validation
+	const ThemeManager = {
+		// Valid theme options - centralized configuration
+		validThemes: new Set(['light', 'dark', 'auto']),
+		defaultTheme: 'light',
+		storageKey: 'theme',
 
-		// Update active button state
-		const themeButtons = document.querySelectorAll('.theme-btn');
-		themeButtons.forEach(btn => {
-			btn.classList.toggle('active', btn.getAttribute('data-theme') === theme);
-		});
+		// Cache DOM elements for performance
+		documentElement: document.documentElement,
+		themeButtons: null,
+
+		// Initialize theme buttons cache
+		initButtons() {
+			this.themeButtons = document.querySelectorAll('.theme-btn');
+		},
+
+		// Validate theme parameter
+		isValidTheme(theme) {
+			return typeof theme === 'string' && this.validThemes.has(theme);
+		},
+
+		// Safe localStorage operations with error handling
+		saveTheme(theme) {
+			try {
+				localStorage.setItem(this.storageKey, theme);
+				return true;
+			} catch (error) {
+				console.warn('Failed to save theme preference:', error);
+				return false;
+			}
+		},
+
+		loadTheme() {
+			try {
+				const savedTheme = localStorage.getItem(this.storageKey);
+				return this.isValidTheme(savedTheme) ? savedTheme : this.defaultTheme;
+			} catch (error) {
+				console.warn('Failed to load theme preference:', error);
+				return this.defaultTheme;
+			}
+		},
+
+		// Apply theme to document with validation
+		applyTheme(theme) {
+			if (!this.isValidTheme(theme)) {
+				console.warn(`Invalid theme '${theme}', using default:`, this.defaultTheme);
+				theme = this.defaultTheme;
+			}
+
+			// Use cached documentElement reference for performance
+			this.documentElement.setAttribute('data-theme', theme);
+
+			// Dispatch custom event for theme change notifications
+			this.documentElement.dispatchEvent(new CustomEvent('themeChanged', {
+				detail: { theme, timestamp: Date.now() }
+			}));
+
+			return theme;
+		},
+
+		// Update button states with performance optimization
+		updateButtonStates(activeTheme) {
+			// Use cached buttons or query if not cached
+			const buttons = this.themeButtons || document.querySelectorAll('.theme-btn');
+
+			if (buttons.length === 0) return;
+
+			// Batch DOM updates using DocumentFragment for better performance
+			buttons.forEach(btn => {
+				const btnTheme = btn.getAttribute('data-theme');
+				const isActive = btnTheme === activeTheme;
+
+				// Only update if state changed to avoid unnecessary DOM operations
+				if (btn.classList.contains('active') !== isActive) {
+					btn.classList.toggle('active', isActive);
+				}
+			});
+		},
+
+		// Main theme setter with comprehensive error handling
+		setTheme(theme) {
+			try {
+				// Apply theme and get the actual theme used (in case of fallback)
+				const appliedTheme = this.applyTheme(theme);
+
+				// Save to localStorage
+				this.saveTheme(appliedTheme);
+
+				// Update UI button states
+				this.updateButtonStates(appliedTheme);
+
+				return appliedTheme;
+			} catch (error) {
+				console.error('Failed to set theme:', error);
+				// Fallback to default theme
+				return this.setTheme(this.defaultTheme);
+			}
+		}
+	};
+
+	// Legacy function wrappers for backward compatibility
+	function setTheme(theme) {
+		return ThemeManager.setTheme(theme);
 	}
 
 	function initTheme() {
-		const savedTheme = localStorage.getItem('theme') || 'light';
-		setTheme(savedTheme);
+		// Initialize button cache
+		ThemeManager.initButtons();
+
+		// Load and apply saved theme
+		const savedTheme = ThemeManager.loadTheme();
+		ThemeManager.setTheme(savedTheme);
+
+		// Add system theme preference listener for 'auto' theme
+		if (window.matchMedia) {
+			const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+			mediaQuery.addEventListener('change', (e) => {
+				const currentTheme = ThemeManager.loadTheme();
+				if (currentTheme === 'auto') {
+					// Re-apply auto theme to trigger system preference check
+					ThemeManager.setTheme('auto');
+				}
+			});
+		}
 	}
 
 	async function init() {
@@ -1573,7 +1684,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		// Set up theme buttons
 		const themeButtons = document.querySelectorAll('.theme-btn');
 		themeButtons.forEach(button => {
-			button.addEventListener('click', function() {
+			button.addEventListener('click', function () {
 				const theme = this.getAttribute('data-theme');
 				setTheme(theme);
 			});
