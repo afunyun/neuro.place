@@ -276,7 +276,9 @@ export class GridDurableObject {
 				if (info?.isAdmin) {
 					this.adminSessions.add(ws);
 				}
-			} catch { }
+			} catch (error) {
+				console.error("Error deserializing WebSocket attachment:", error);
+			}
 		}
 	}
 
