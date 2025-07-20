@@ -1,4 +1,3 @@
-// ===== UTILITY FUNCTIONS =====
 function getRandom(min, max) {
 	return Math.random() * (max - min) + min;
 }
@@ -16,12 +15,9 @@ function calculateMoveDistance() {
 	return viewportHypotenuse * 2.0;
 }
 
-// ===== CSS-BASED STAR FIX =====
-// Fix for CSS-based .star elements to use absolute move distance
 function initializeCSSStars() {
 	const moveDistance = calculateMoveDistance();
 
-	// Find all CSS-based stars and set their move distance
 	const cssStars = document.querySelectorAll(".star");
 	cssStars.forEach((star) => {
 		star.style.setProperty("--move-distance", `${moveDistance}px`);
@@ -43,15 +39,12 @@ function updateCSSStarsOnResize() {
 	});
 }
 
-// ===== JAVASCRIPT-GENERATED STARS =====
 document.addEventListener("DOMContentLoaded", () => {
-	// Initialize CSS-based star fixes
 	initializeCSSStars();
 	updateCSSStarsOnResize();
 
-	// Initialize JavaScript-generated stars
 	const background = document.querySelector(".background");
-	if (!background) return; // Exit if no background element found
+	if (!background) return;
 
 	const numberOfStars = 150;
 

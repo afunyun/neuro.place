@@ -54,13 +54,11 @@ document.addEventListener("DOMContentLoaded", () => {
 	const zoomOutBtn = document.getElementById("zoomOutBtn");
 	const themeToggleBtn = document.getElementById("themeToggleBtn");
 	const bottomControls = document.getElementById("themeToggle");
-	// Mobile menu elements
 	const mobileMenuToggle = document.getElementById("mobileMenuToggle");
 	const leftPanel = document.querySelector(".left-panel");
 	const mobileCloseBtn = document.querySelector(".mobile-close-btn");
 	const desktopCollapseBtn = document.querySelector(".desktop-collapse-btn");
 
-	// Create mobile sidebar overlay
 	const mobileOverlay = document.createElement("div");
 	mobileOverlay.className = "mobile-sidebar-overlay";
 	document.body.appendChild(mobileOverlay);
@@ -133,7 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 
 		if (liveViewCanvas) {
-			// Keep internal drawing grid but allow CSS to scale canvas
 			liveViewCanvas.width = LIVE_VIEW_CANVAS_WIDTH;
 			liveViewCanvas.height = LIVE_VIEW_CANVAS_HEIGHT;
 		}
@@ -400,7 +397,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		ctx.save();
 
-		// Use exact offsets for precise pixel alignment
 		ctx.translate(offsetX, offsetY);
 		ctx.scale(scale, scale);
 
@@ -417,7 +413,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (selectedPixel.x !== null && selectedPixel.y !== null) {
 			highlightCtx.save();
 
-			// Use exact offsets to match the main canvas transformation
 			highlightCtx.translate(offsetX, offsetY);
 			highlightCtx.scale(scale, scale);
 			highlightCtx.strokeStyle = "var(--accent, orange)";
@@ -746,15 +741,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	function getGridCoordsFromScreen(clientX, clientY) {
 		const rect = canvas.getBoundingClientRect();
 
-		// Use exact canvas coordinates without rounding
 		const canvasX = clientX - rect.left;
 		const canvasY = clientY - rect.top;
 
-		// Use exact offsets to match the drawing transformation
 		const worldX = (canvasX - offsetX) / scale;
 		const worldY = (canvasY - offsetY) / scale;
 
-		// Convert to grid coordinates with proper rounding for pixel center alignment
 		const gridX = Math.floor(worldX / PIXEL_SIZE);
 		const gridY = Math.floor(worldY / PIXEL_SIZE);
 
@@ -936,7 +928,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const touch2 = event.touches[1];
 		return Math.sqrt(
 			(touch2.clientX - touch1.clientX) ** 2 +
-			(touch2.clientY - touch1.clientY) ** 2,
+				(touch2.clientY - touch1.clientY) ** 2,
 		);
 	}
 
@@ -1006,9 +998,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function handleKeyDown(event) {
-		// ignore keyboard events when typing in inputs, textareas, or contentEditable elements
 		const target = event.target;
-		if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+		if (
+			target.tagName === "INPUT" ||
+			target.tagName === "TEXTAREA" ||
+			target.isContentEditable
+		) {
 			return;
 		}
 		if (event.defaultPrevented) return;
@@ -1445,34 +1440,28 @@ document.addEventListener("DOMContentLoaded", () => {
 		cooldownTimerDiv.style.display = "block";
 	}
 
-	// Theme management with improved error handling and validation
 	const ThemeManager = {
-		// Valid theme options - centralized configuration
-		validThemes: new Set(['light', 'dark', 'auto']),
-		defaultTheme: 'light',
-		storageKey: 'theme',
+		validThemes: new Set(["light", "dark", "auto"]),
+		defaultTheme: "light",
+		storageKey: "theme",
 
-		// Cache DOM elements for performance
 		documentElement: document.documentElement,
 		themeButtons: null,
 
-		// Initialize theme buttons cache
 		initButtons() {
-			this.themeButtons = document.querySelectorAll('.theme-btn');
+			this.themeButtons = document.querySelectorAll(".theme-btn");
 		},
 
-		// Validate theme parameter
 		isValidTheme(theme) {
-			return typeof theme === 'string' && this.validThemes.has(theme);
+			return typeof theme === "string" && this.validThemes.has(theme);
 		},
 
-		// Safe localStorage operations with error handling
 		saveTheme(theme) {
 			try {
 				localStorage.setItem(this.storageKey, theme);
 				return true;
 			} catch (error) {
-				console.warn('Failed to save theme preference:', error);
+				console.warn("Failed to save theme preference:", error);
 				return false;
 			}
 		},
@@ -1482,90 +1471,79 @@ document.addEventListener("DOMContentLoaded", () => {
 				const savedTheme = localStorage.getItem(this.storageKey);
 				return this.isValidTheme(savedTheme) ? savedTheme : this.defaultTheme;
 			} catch (error) {
-				console.warn('Failed to load theme preference:', error);
+				console.warn("Failed to load theme preference:", error);
 				return this.defaultTheme;
 			}
 		},
 
-		// Apply theme to document with validation
 		applyTheme(theme) {
 			if (!this.isValidTheme(theme)) {
-				console.warn(`Invalid theme '${theme}', using default:`, this.defaultTheme);
+				console.warn(
+					`Invalid theme '${theme}', using default:`,
+					this.defaultTheme,
+				);
 				theme = this.defaultTheme;
 			}
 
-			// Use cached documentElement reference for performance
-			this.documentElement.setAttribute('data-theme', theme);
+			this.documentElement.setAttribute("data-theme", theme);
 
-			// Dispatch custom event for theme change notifications
-			this.documentElement.dispatchEvent(new CustomEvent('themeChanged', {
-				detail: { theme, timestamp: Date.now() }
-			}));
+			this.documentElement.dispatchEvent(
+				new CustomEvent("themeChanged", {
+					detail: { theme, timestamp: Date.now() },
+				}),
+			);
 
 			return theme;
 		},
 
-		// Update button states with performance optimization
 		updateButtonStates(activeTheme) {
-			// Use cached buttons or query if not cached
-			const buttons = this.themeButtons || document.querySelectorAll('.theme-btn');
+			const buttons =
+				this.themeButtons || document.querySelectorAll(".theme-btn");
 
 			if (buttons.length === 0) return;
 
-			// Batch DOM updates using DocumentFragment for better performance
-			buttons.forEach(btn => {
-				const btnTheme = btn.getAttribute('data-theme');
+			buttons.forEach((btn) => {
+				const btnTheme = btn.getAttribute("data-theme");
 				const isActive = btnTheme === activeTheme;
 
-				// Only update if state changed to avoid unnecessary DOM operations
-				if (btn.classList.contains('active') !== isActive) {
-					btn.classList.toggle('active', isActive);
+				if (btn.classList.contains("active") !== isActive) {
+					btn.classList.toggle("active", isActive);
 				}
 			});
 		},
 
-		// Main theme setter with comprehensive error handling
 		setTheme(theme) {
 			try {
-				// Apply theme and get the actual theme used (in case of fallback)
 				const appliedTheme = this.applyTheme(theme);
 
-				// Save to localStorage
 				this.saveTheme(appliedTheme);
 
-				// Update UI button states
 				this.updateButtonStates(appliedTheme);
 
 				return appliedTheme;
 			} catch (error) {
-				console.error('Failed to set theme:', error);
-				// Fallback to default theme
+				console.error("Failed to set theme:", error);
 				return this.setTheme(this.defaultTheme);
 			}
-		}
+		},
 	};
 
-	// Legacy function wrappers for backward compatibility
 	function setTheme(theme) {
 		return ThemeManager.setTheme(theme);
 	}
 
 	function initTheme() {
-		// Initialize button cache
 		ThemeManager.initButtons();
 
-		// Load and apply saved theme
 		const savedTheme = ThemeManager.loadTheme();
 		ThemeManager.setTheme(savedTheme);
 
-		// Add system theme preference listener for 'auto' theme
 		if (window.matchMedia) {
-			const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-			mediaQuery.addEventListener('change', (e) => {
+			const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+			mediaQuery.addEventListener("change", (e) => {
 				const currentTheme = ThemeManager.loadTheme();
-				if (currentTheme === 'auto') {
-					// Re-apply auto theme to trigger system preference check
-					ThemeManager.setTheme('auto');
+				if (currentTheme === "auto") {
+					ThemeManager.setTheme("auto");
 				}
 			});
 		}
@@ -1665,7 +1643,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					deltaY: -1,
 					clientX: rect.left + canvas.clientWidth / 2,
 					clientY: rect.top + canvas.clientHeight / 2,
-					preventDefault: () => { },
+					preventDefault: () => {},
 				});
 			});
 		}
@@ -1676,21 +1654,19 @@ document.addEventListener("DOMContentLoaded", () => {
 					deltaY: 1,
 					clientX: rect.left + canvas.clientWidth / 2,
 					clientY: rect.top + canvas.clientHeight / 2,
-					preventDefault: () => { },
+					preventDefault: () => {},
 				});
 			});
 		}
 
-		// Set up theme buttons
-		const themeButtons = document.querySelectorAll('.theme-btn');
-		themeButtons.forEach(button => {
-			button.addEventListener('click', function () {
-				const theme = this.getAttribute('data-theme');
+		const themeButtons = document.querySelectorAll(".theme-btn");
+		themeButtons.forEach((button) => {
+			button.addEventListener("click", function () {
+				const theme = this.getAttribute("data-theme");
 				setTheme(theme);
 			});
 		});
 
-		// Sidebar functionality (works for both mobile and desktop)
 		function isMobileView() {
 			return window.innerWidth <= 768;
 		}
@@ -1699,7 +1675,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (!leftPanel) return;
 
 			if (isMobileView()) {
-				// Mobile behavior
 				const isOpen = leftPanel.classList.contains("open");
 
 				if (isOpen) {
@@ -1712,7 +1687,6 @@ document.addEventListener("DOMContentLoaded", () => {
 					document.body.style.overflow = "hidden";
 				}
 			} else {
-				// Desktop behavior
 				const isCollapsed = leftPanel.classList.contains("collapsed");
 
 				if (isCollapsed) {
@@ -1729,18 +1703,15 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (!leftPanel) return;
 
 			if (isMobileView()) {
-				// Mobile behavior
 				leftPanel.classList.remove("open");
 				mobileOverlay.classList.remove("active");
 				document.body.style.overflow = "";
 			} else {
-				// Desktop behavior
 				leftPanel.classList.add("collapsed");
 				localStorage.setItem("sidebarCollapsed", "true");
 			}
 		}
 
-		// Legacy function names for compatibility
 		function toggleMobileMenu() {
 			toggleSidebar();
 		}
@@ -1749,7 +1720,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			closeSidebar();
 		}
 
-		// Sidebar event listeners
 		if (mobileMenuToggle) {
 			mobileMenuToggle.addEventListener("click", toggleSidebar);
 		}
@@ -1766,38 +1736,30 @@ document.addEventListener("DOMContentLoaded", () => {
 			mobileOverlay.addEventListener("click", closeSidebar);
 		}
 
-		// Close mobile menu when clicking inside the left panel (optional)
-		// This allows users to close the menu by clicking on content
 		if (leftPanel) {
 			leftPanel.addEventListener("click", (e) => {
-				// Only close if clicking directly on the panel, not on interactive elements
 				if (e.target === leftPanel || e.target.closest(".panel-header")) {
 					closeMobileMenu();
 				}
 			});
 		}
 
-		// Close mobile menu on window resize if screen becomes desktop size
 		window.addEventListener("resize", () => {
 			if (window.innerWidth > 768) {
-				// Switched to desktop view
 				if (leftPanel) {
 					leftPanel.classList.remove("open");
 					mobileOverlay.classList.remove("active");
 					document.body.style.overflow = "";
 				}
 			} else {
-				// Switched to mobile view
 				if (leftPanel) {
 					leftPanel.classList.remove("collapsed");
 				}
 			}
 		});
 
-		// Initialize sidebar state on page load
 		function initializeSidebar() {
 			if (leftPanel && !isMobileView()) {
-				// On desktop, restore collapsed state from localStorage
 				const savedCollapsed = localStorage.getItem("sidebarCollapsed");
 				if (savedCollapsed === "true") {
 					leftPanel.classList.add("collapsed");
@@ -1805,7 +1767,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			}
 		}
 
-		// Initialize sidebar on page load
 		initializeSidebar();
 
 		function clearChatLog() {
@@ -1992,7 +1953,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 		}
 
-		showIfAdmin() { }
+		showIfAdmin() {}
 
 		createConsoleWindow() {
 			this.consoleWindow = document.createElement("div");
@@ -2124,9 +2085,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			const windowWidth = 600;
 			const windowHeight = 400;
 
-			// Position off-screen at the bottom to prevent flex container interference
 			const x = (viewportWidth - windowWidth) / 2;
-			const y = viewportHeight + 100; // Move way below viewport
+			const y = viewportHeight + 100;
 
 			this.consoleWindow.style.left = `${x}px`;
 			this.consoleWindow.style.top = `${y}px`;

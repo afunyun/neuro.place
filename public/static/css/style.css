@@ -11,7 +11,6 @@
 }
 
 @layer components {
-
 	#privacyStatementBtn,
 	#adminToggleBtn,
 	#openSettingsBtn {
@@ -101,7 +100,6 @@ html.nweroStyle {
 	margin: 0;
 }
 
-
 .glass {
 	background: var(--glass-bg);
 	backdrop-filter: blur(10px);
@@ -130,10 +128,12 @@ html.nweroStyle {
 	content: "";
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(45deg,
-			transparent,
-			rgba(255, 255, 255, 0.1),
-			transparent);
+	background: linear-gradient(
+		45deg,
+		transparent,
+		rgba(255, 255, 255, 0.1),
+		transparent
+	);
 	transform: translateX(-100%);
 	transition: transform 0.3s ease;
 }
@@ -198,17 +198,18 @@ html.nweroStyle {
 	content: "";
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(90deg,
-			var(--accent),
-			var(--accent-hover),
-			var(--accent));
+	background: linear-gradient(
+		90deg,
+		var(--accent),
+		var(--accent-hover),
+		var(--accent)
+	);
 	background-size: 200% 100%;
 	animation: gradient-shift 3s ease-in-out infinite;
 	opacity: 0.05;
 }
 
 @keyframes gradient-shift {
-
 	0%,
 	100% {
 		background-position: 0 50%;
@@ -294,10 +295,12 @@ html.nweroStyle {
 	content: "";
 	position: absolute;
 	inset: -2px;
-	background: linear-gradient(45deg,
-			var(--accent),
-			var(--accent-hover),
-			var(--accent));
+	background: linear-gradient(
+		45deg,
+		var(--accent),
+		var(--accent-hover),
+		var(--accent)
+	);
 	background-size: 200% 200%;
 	border-radius: 1.5rem;
 	opacity: 0;
@@ -310,14 +313,13 @@ html.nweroStyle {
 	opacity: 0.3;
 }
 
-.live-view-container>canvas {
+.live-view-container > canvas {
 	width: 100%;
 	height: 100%;
 	display: block;
 }
 
 @keyframes gradient-border {
-
 	0%,
 	100% {
 		background-position: 0 50%;
@@ -461,8 +463,6 @@ html.nweroStyle {
 .canvas-container {
 	position: relative;
 	height: auto;
-	width: 100%;
-	height: 100%;
 	background: var(--bg-primary);
 	border-radius: var(--radius-lg);
 	border: 2px solid var(--border);
@@ -470,7 +470,7 @@ html.nweroStyle {
 	transition: all 0.3s ease;
 }
 
-.canvas-container>canvas {
+.canvas-container > canvas {
 	width: 100%;
 	height: 100%;
 	display: flex;
@@ -509,7 +509,6 @@ html.nweroStyle {
 	background-clip: padding-box;
 }
 
-
 ::-webkit-scrollbar-corner {
 	background: var(--bg-tertiary);
 }
@@ -518,7 +517,6 @@ html.nweroStyle {
 	scrollbar-width: thin;
 	scrollbar-color: var(--border) var(--bg-tertiary);
 }
-
 
 .btn:focus-visible {
 	outline: 2px solid var(--accent);
@@ -538,7 +536,8 @@ html.nweroStyle {
 	z-index: 1000;
 	opacity: 0;
 	visibility: hidden;
-	transition: opacity 0.3s ease,
+	transition:
+		opacity 0.3s ease,
 		visibility 0.3s ease;
 }
 
@@ -548,21 +547,22 @@ html.nweroStyle {
 }
 
 .settings-window {
-    background-color: var(--bg-secondary);
-    color: var(--text-primary);
-    border-radius: 12px;
-    padding: 24px;
-    box-shadow: var(--shadow-lg);
-    max-width: 90%;
-    width: 500px;
-    min-height: 450px; /* Increased height */
-    overflow-y: auto;
-    position: relative;
-    transform: translateY(20px);
-    opacity: 0;
-    transition: transform 0.3s ease-out,
-        opacity 0.3s ease-out;
-    border: 1px solid var(--border);
+	background-color: var(--bg-secondary);
+	color: var(--text-primary);
+	border-radius: 12px;
+	padding: 24px;
+	box-shadow: var(--shadow-lg);
+	max-width: 90%;
+	width: 500px;
+	min-height: 450px;
+	overflow-y: auto;
+	position: relative;
+	transform: translateY(20px);
+	opacity: 0;
+	transition:
+		transform 0.3s ease-out,
+		opacity 0.3s ease-out;
+	border: 1px solid var(--border);
 }
 
 .modal-overlay.active .settings-window {
@@ -581,7 +581,8 @@ html.nweroStyle {
 	cursor: pointer;
 	padding: 8px;
 	border-radius: 8px;
-	transition: background-color 0.2s ease,
+	transition:
+		background-color 0.2s ease,
 		color 0.2s ease;
 }
 
@@ -602,35 +603,34 @@ html.nweroStyle {
 	border-bottom: none;
 }
 
-/* Theme selector styles */
 .theme-toggle-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
+	display: flex;
+	gap: 10px;
+	margin-top: 20px;
 }
 
 .theme-btn {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--bg-tertiary);
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    text-align: center;
+	flex: 1;
+	padding: 10px;
+	border-radius: 8px;
+	border: 1px solid var(--border);
+	background: var(--bg-tertiary);
+	color: var(--text-primary);
+	cursor: pointer;
+	transition: all 0.2s ease;
+	text-align: center;
 }
 
 .theme-btn.active {
-    background: var(--accent);
-    color: white;
-    border-color: var(--accent);
-    box-shadow: var(--shadow-md);
+	background: var(--accent);
+	color: white;
+	border-color: var(--accent);
+	box-shadow: var(--shadow-md);
 }
 
 .theme-btn:hover:not(.active) {
-    background: var(--bg-secondary);
-    transform: translateY(-2px);
+	background: var(--bg-secondary);
+	transform: translateY(-2px);
 }
 
 .settings-window input[type="text"],
@@ -680,7 +680,6 @@ html.nweroStyle {
 }
 
 @media (max-width: 768px) {
-
 	.coords-display,
 	.zoom,
 	.zoom-in,
@@ -936,13 +935,19 @@ html.nweroStyle {
 
 	95% {
 		opacity: 1;
-		transform: translate(var(--move-distance, 1500px),
-				var(--move-distance, 1500px)) rotate(45deg);
+		transform: translate(
+				var(--move-distance, 1500px),
+				var(--move-distance, 1500px)
+			)
+			rotate(45deg);
 	}
 
 	100% {
-		transform: translate(var(--move-distance, 1500px),
-				var(--move-distance, 1500px)) rotate(45deg);
+		transform: translate(
+				var(--move-distance, 1500px),
+				var(--move-distance, 1500px)
+			)
+			rotate(45deg);
 		opacity: 0;
 	}
 }
@@ -1034,10 +1039,14 @@ html.nweroStyle {
 	left: 50%;
 	width: var(--trail-length, 60px);
 	height: var(--trail-thickness, 3px);
-	background: var(--trail-gradient,
-			linear-gradient(to top left,
-				rgba(255, 255, 255, 0.8),
-				rgba(255, 255, 255, 0)));
+	background: var(
+		--trail-gradient,
+		linear-gradient(
+			to top left,
+			rgba(255, 255, 255, 0.8),
+			rgba(255, 255, 255, 0)
+		)
+	);
 	transform: translate(-100%, -100%) rotate(45deg);
 	transform-origin: right bottom;
 	z-index: 1;
@@ -1051,8 +1060,10 @@ html.nweroStyle {
 	}
 
 	100% {
-		transform: translate(var(--move-distance, 2000px),
-				var(--move-distance, 2000px));
+		transform: translate(
+			var(--move-distance, 2000px),
+			var(--move-distance, 2000px)
+		);
 		opacity: 0;
 	}
 }
@@ -1178,9 +1189,11 @@ html.nweroStyle {
 
 .timer body {
 	min-height: 100vh;
-	background: linear-gradient(135deg,
-			var(--bg-primary, #ff99cc) 0%,
-			var(--bg-secondary, #ff6699) 100%);
+	background: linear-gradient(
+		135deg,
+		var(--bg-primary, #ff99cc) 0%,
+		var(--bg-secondary, #ff6699) 100%
+	);
 	overflow: hidden;
 }
 
@@ -1205,7 +1218,8 @@ html.nweroStyle {
 	margin-bottom: 2rem;
 	text-align: center;
 	letter-spacing: 1px;
-	text-shadow: 2px 2px 0 #fff8,
+	text-shadow:
+		2px 2px 0 #fff8,
 		0 2px 8px #fff4;
 }
 
@@ -1232,7 +1246,8 @@ html.nweroStyle {
 	font-weight: bold;
 	color: var(--text-primary);
 	margin-bottom: 0.2em;
-	text-shadow: 2px 2px 0 #fff8,
+	text-shadow:
+		2px 2px 0 #fff8,
 		0 2px 8px #fff4;
 }
 
@@ -1302,13 +1317,19 @@ html.nweroStyle {
 
 	95% {
 		opacity: 1;
-		transform: translate(var(--move-distance, 1500px),
-				var(--move-distance, 1500px)) rotate(45deg);
+		transform: translate(
+				var(--move-distance, 1500px),
+				var(--move-distance, 1500px)
+			)
+			rotate(45deg);
 	}
 
 	100% {
-		transform: translate(var(--move-distance, 1500px),
-				var(--move-distance, 1500px)) rotate(45deg);
+		transform: translate(
+				var(--move-distance, 1500px),
+				var(--move-distance, 1500px)
+			)
+			rotate(45deg);
 		opacity: 0;
 	}
 }
@@ -1400,10 +1421,14 @@ html.nweroStyle {
 	left: 50%;
 	width: var(--trail-length, 60px);
 	height: var(--trail-thickness, 3px);
-	background: var(--trail-gradient,
-			linear-gradient(to top left,
-				rgba(255, 255, 255, 0.8),
-				rgba(255, 255, 255, 0)));
+	background: var(
+		--trail-gradient,
+		linear-gradient(
+			to top left,
+			rgba(255, 255, 255, 0.8),
+			rgba(255, 255, 255, 0)
+		)
+	);
 	transform: translate(-100%, -100%) rotate(45deg);
 	transform-origin: right bottom;
 	z-index: 1;
@@ -1417,8 +1442,10 @@ html.nweroStyle {
 	}
 
 	100% {
-		transform: translate(var(--move-distance, 2000px),
-				var(--move-distance, 2000px));
+		transform: translate(
+			var(--move-distance, 2000px),
+			var(--move-distance, 2000px)
+		);
 		opacity: 0;
 	}
 }
@@ -1544,9 +1571,11 @@ html.nweroStyle {
 
 .timer body {
 	min-height: 100vh;
-	background: linear-gradient(135deg,
-			var(--bg-primary, #ff99cc) 0%,
-			var(--bg-secondary, #ff6699) 100%);
+	background: linear-gradient(
+		135deg,
+		var(--bg-primary, #ff99cc) 0%,
+		var(--bg-secondary, #ff6699) 100%
+	);
 	overflow: hidden;
 }
 

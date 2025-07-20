@@ -63,11 +63,13 @@
 	}
 
 	.nweroStyle {
-		--background: repeating-linear-gradient(135deg,
-				#ff99cc 0px,
-				#ff99cc 18px,
-				#ffadd6 18px,
-				#ffadd6 20px);
+		--background: repeating-linear-gradient(
+			135deg,
+			#ff99cc 0px,
+			#ff99cc 18px,
+			#ffadd6 18px,
+			#ffadd6 20px
+		);
 		--bg-primary: #ff99cc;
 		--bg-secondary: #ff6699;
 		--bg-tertiary: #e75480;
