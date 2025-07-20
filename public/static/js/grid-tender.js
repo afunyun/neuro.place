@@ -27,9 +27,6 @@ class GridTender {
 		this.init();
 	}
 
-	/**
-	 * Detect device type from user agent
-	 */
 	detectDevice() {
 		const userAgent = navigator.userAgent;
 		if (
@@ -43,9 +40,6 @@ class GridTender {
 		return "desktop";
 	}
 
-	/**
-	 * Initialize GridTender
-	 */
 	async init() {
 		this.log("Initializing GridTender...");
 
@@ -77,9 +71,6 @@ class GridTender {
 		this.log("GridTender initialized successfully");
 	}
 
-	/**
-	 * Load authentication state from localStorage
-	 */
 	async loadAuthState() {
 		const previousAuth = this.isAuthenticated;
 
@@ -130,10 +121,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Clear authentication state
-	 */
-
 	clearAuthState() {
 		this.userToken = null;
 		this.userData = null;
@@ -149,9 +136,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Check if current user is whitelisted
-	 */
 	async checkWhitelistStatus() {
 		if (!this.isAuthenticated) {
 			this.isWhitelisted = false;
@@ -237,9 +221,6 @@ class GridTender {
 		return this.isWhitelisted;
 	}
 
-	/**
-	 * Check if user can place pixels
-	 */
 	canPlacePixel() {
 		if (!this.isAuthenticated) {
 			return { allowed: true, reason: "Anonymous user allowed" };
@@ -252,9 +233,6 @@ class GridTender {
 		return { allowed: true, reason: "Authorized" };
 	}
 
-	/**
-	 * Enhanced pixel placement with whitelist checking
-	 */
 	async placePixel(x, y, color) {
 		const canPlace = this.canPlacePixel();
 
@@ -328,9 +306,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Get whitelist (admin only)
-	 */
 	async getWhitelist() {
 		if (!this.isAdmin) {
 			throw new Error("Admin access required");
@@ -355,9 +330,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Add user to whitelist (admin only)
-	 */
 	async addToWhitelist(userId, username = null) {
 		if (!this.isAdmin) {
 			throw new Error("Admin access required");
@@ -392,9 +364,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Remove user from whitelist (admin only)
-	 */
 	async removeFromWhitelist(userId) {
 		if (!this.isAdmin) {
 			throw new Error("Admin access required");
@@ -431,9 +400,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Toggle whitelist system (admin only)
-	 */
 	async toggleWhitelist() {
 		if (!this.isAdmin) {
 			throw new Error("Admin access required");
@@ -471,9 +437,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Create UI elements
-	 */
 	createUI() {
 		this.statusElement = document.getElementById("gridTenderStatus");
 
@@ -483,9 +446,6 @@ class GridTender {
 		this.updateUI();
 	}
 
-	/**
-	 * Create admin panel
-	 */
 	createAdminPanel() {
 		this.adminPanelElement = document.createElement("div");
 		this.adminPanelElement.id = "gridAdmin";
@@ -960,7 +920,7 @@ class GridTender {
                 font-family: monospace;
             }
 
-            /* Improved logout button styling */
+           
             #logoutBtn {
                 background: var(--error, #ef4444);
                 color: white;
@@ -979,7 +939,7 @@ class GridTender {
                 transform: translateY(-1px);
             }
 
-            /* Site announcement banner */
+           
             .site-announcement {
                 position: absolute;
                 top: 50%;

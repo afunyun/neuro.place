@@ -17,3 +17,4 @@ yarn.lock
 tools/
 timer/*
 .env
+.idea/
