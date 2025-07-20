@@ -18,31 +18,30 @@
 </head>
 
 <body class="flex flex-col">
-    <header class="header">
-        <div class="relative container mx-auto px-6">
-            <div class="relative flex items-center justify-center">
-                <h1 class="mr-auto text-center">Neuro.Place</h1>
-                <div id="siteAnnouncement" class="site-announcement"></div>
-                <div class="ml-auto flex items-center gap-2">
-                    <button id="privacyStatementBtn"
-                        class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-blue-600 p-0 transition-colors hover:bg-blue-700"
-                        title="Privacy Statement">
-                        <span class="material-icons-round text-white" style="font-size: 16px;">shield</span>
-                    </button>
-                    <button id="adminToggleBtn"
-                        class="flex hidden h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-purple-600 p-0 transition-colors hover:bg-purple-700"
-                        title="Toggle Admin Panel">
-                        <span class="material-icons-round text-white"
-                            style="font-size: 16px;">admin_panel_settings</span>
-                    </button>
-                    <button id="openSettingsBtn"
-                        class="ml-auto flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gray-500 p-0">
-                        <img id="userAvatar" class="h-full w-full rounded-full object-cover" alt="User Avatar"
-                            src="static/img/user.png" />
-                    </button>
-                </div>
-            </div>
+    <header class="header" style="padding-left: 2rem; padding-right: 2rem;">
+        <h1>Neuro.Place</h1>
+
+        <div id="siteAnnouncement" class="site-announcement show absolute left-1/2 transform -translate-x-1/2"></div>
+
+        <div class="flex items-center gap-2">
+            <button id="privacyStatementBtn"
+                class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-blue-600 p-0 transition-colors hover:bg-blue-700"
+                title="Privacy Statement">
+                <span class="material-icons-round text-white" style="font-size: 16px;">shield</span>
+            </button>
+            <button id="adminToggleBtn"
+                class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-purple-600 p-0 transition-colors hover:bg-purple-700"
+                title="Toggle Admin Panel">
+                <span class="material-icons-round text-white" style="font-size: 16px;">admin_panel_settings</span>
+            </button>
+            <button id="openSettingsBtn"
+                class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gray-500 p-0">
+                <img id="userAvatar" class="h-full w-full rounded-full object-cover" alt="User Avatar"
+                    src="static/img/user.png">
+            </button>
+
         </div>
+
     </header>
 
     <div class="flex-container">
@@ -96,10 +95,8 @@
 
         <main class="main-content" id="main-content">
             <div class="canvas-container">
-                <canvas id="neuroCanvas"
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
-                <canvas id="neuroHighlightCanvas"
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
+                <canvas id="neuroCanvas"></canvas>
+                <canvas id="neuroHighlightCanvas"></canvas>
             </div>
         </main>
     </div>
@@ -134,16 +131,16 @@
                 </div>
 
                 <div class="setting-item">
-                    <label for="darkModeToggle" class="text-text-primary">Dark Mode Toggle</label>
-                    <button id="themeToggleBtn" class="btn btn-secondary btn-icon"
-                        style="position: absolute; right: 21px; z-index: 10;" title="Toggle theme">
-                        <span class="material-icons-round">light_mode</span>
-                    </button>
+                    <label class="text-text-primary">Theme Selector</label>
+                    <div class="theme-toggle-group">
+                        <button class="theme-btn" data-theme="light">Light</button>
+                        <button class="theme-btn" data-theme="neuro">Neuro</button>
+                        <button class="theme-btn" data-theme="dark">Dark</button>
+                    </div>
                 </div>
                 <div class="setting-item">
                     <label for="euPrivacyOptOut" class="text-text-primary">Disable Analytics & Tracking
                         PLACEHOLDER</label>
-                    <input type="checkbox" id="euPrivacyOptOut" class="input-field" />
                 </div>
 
 
@@ -308,7 +305,7 @@
             <div id="bottomControls" class="control-group">
                 <span class="control-label">Color</span>
                 <div class="color-picker-wrapper">
-                    <input type="color" id="colorPicker" value="#000000" />
+                    <input type="color" id="colorPicker" value="#000000">
                 </div>
                 <button id="placePixelBtn" class="btn btn-primary">
                     <span class="material-icons-round" style="font-size: 1.125rem;">add</span>
@@ -317,9 +314,9 @@
             </div>
 
             <div class="coords-display absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" id="selectedCoords">
-                No pixel selected</div>
+                None</div>
 
-            <div class="control-group zoom ml-auto">
+            <div class="control-group zoom">
                 <button id="zoomOutBtn" class="btn btn-secondary btn-icon zoom-out" title="Zoom out">
                     <span class="material-icons-round">zoom_out</span>
                 </button>
@@ -330,6 +327,7 @@
         </div>
     </footer>
 
+    <script src="static/js/admin-service.js"></script>
     <script type="module" src="static/js/script.js"></script>
     <script src="static/js/grid-tender.js"></script>
     <script>

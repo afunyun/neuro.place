@@ -27,21 +27,19 @@ class GridTender {
 		this.init();
 	}
 
-	/**
-	 * Detect device type from user agent
-	 */
 	detectDevice() {
 		const userAgent = navigator.userAgent;
-		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
-			if (/iPad|tablet/i.test(userAgent)) return 'tablet';
-			return 'mobile';
+		if (
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				userAgent,
+			)
+		) {
+			if (/iPad|tablet/i.test(userAgent)) return "tablet";
+			return "mobile";
 		}
-		return 'desktop';
+		return "desktop";
 	}
 
-	/**
-	 * Initialize GridTender
-	 */
 	async init() {
 		this.log("Initializing GridTender...");
 
@@ -73,9 +71,6 @@ class GridTender {
 		this.log("GridTender initialized successfully");
 	}
 
-	/**
-	 * Load authentication state from localStorage
-	 */
 	async loadAuthState() {
 		const previousAuth = this.isAuthenticated;
 
@@ -126,10 +121,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Clear authentication state
-	 */
-
 	clearAuthState() {
 		this.userToken = null;
 		this.userData = null;
@@ -138,16 +129,13 @@ class GridTender {
 		this.isAdmin = false;
 		localStorage.removeItem("discord_token");
 		localStorage.removeItem("user_data");
-		
+
 		if (this.adminPanelElement) {
 			this.adminPanelElement.classList.add("hidden");
 			this.adminPanelCollapsed = true;
 		}
 	}
 
-	/**
-	 * Check if current user is whitelisted
-	 */
 	async checkWhitelistStatus() {
 		if (!this.isAuthenticated) {
 			this.isWhitelisted = false;
@@ -233,9 +221,6 @@ class GridTender {
 		return this.isWhitelisted;
 	}
 
-	/**
-	 * Check if user can place pixels
-	 */
 	canPlacePixel() {
 		if (!this.isAuthenticated) {
 			return { allowed: true, reason: "Anonymous user allowed" };
@@ -248,9 +233,6 @@ class GridTender {
 		return { allowed: true, reason: "Authorized" };
 	}
 
-	/**
-	 * Enhanced pixel placement with whitelist checking
-	 */
 	async placePixel(x, y, color) {
 		const canPlace = this.canPlacePixel();
 
@@ -260,7 +242,9 @@ class GridTender {
 		}
 
 		try {
-			const sessionId = window.sessionId || `session_${Math.random().toString(36).substring(2, 11)}${Date.now().toString(36)}`;
+			const sessionId =
+				window.sessionId ||
+				`session_${Math.random().toString(36).substring(2, 11)}${Date.now().toString(36)}`;
 			const sessionStartTime = window.sessionStartTime || Date.now();
 			const placementCount = window.placementCount || 1;
 			const currentTime = Date.now();
@@ -273,7 +257,7 @@ class GridTender {
 				"X-Session-Duration": (currentTime - sessionStartTime).toString(),
 				"X-Placement-Count": placementCount.toString(),
 				"X-Time-To-First": "0",
-				"X-Device-Type": this.detectDevice()
+				"X-Device-Type": this.detectDevice(),
 			};
 
 			if (this.userToken) {
@@ -322,9 +306,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Get whitelist (admin only)
-	 */
 	async getWhitelist() {
 		if (!this.isAdmin) {
 			throw new Error("Admin access required");
@@ -349,9 +330,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Add user to whitelist (admin only)
-	 */
 	async addToWhitelist(userId, username = null) {
 		if (!this.isAdmin) {
 			throw new Error("Admin access required");
@@ -386,9 +364,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Remove user from whitelist (admin only)
-	 */
 	async removeFromWhitelist(userId) {
 		if (!this.isAdmin) {
 			throw new Error("Admin access required");
@@ -425,9 +400,6 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Toggle whitelist system (admin only)
-	 */
 	async toggleWhitelist() {
 		if (!this.isAdmin) {
 			throw new Error("Admin access required");
@@ -465,22 +437,15 @@ class GridTender {
 		}
 	}
 
-	/**
-	 * Create UI elements
-	 */
 	createUI() {
 		this.statusElement = document.getElementById("gridTenderStatus");
 
 		this.adminToggleBtn = document.getElementById("adminToggleBtn");
 
-
 		this.addStyles();
 		this.updateUI();
 	}
 
-	/**
-	 * Create admin panel
-	 */
 	createAdminPanel() {
 		this.adminPanelElement = document.createElement("div");
 		this.adminPanelElement.id = "gridAdmin";
@@ -955,7 +920,7 @@ class GridTender {
                 font-family: monospace;
             }
 
-            /* Improved logout button styling */
+           
             #logoutBtn {
                 background: var(--error, #ef4444);
                 color: white;
@@ -974,7 +939,7 @@ class GridTender {
                 transform: translateY(-1px);
             }
 
-            /* Site announcement banner */
+           
             .site-announcement {
                 position: absolute;
                 top: 50%;
@@ -1434,11 +1399,11 @@ class GridTender {
 	 * Open the full admin dashboard
 	 */
 	openDashboard() {
-		const token = localStorage.getItem('discord_token');
+		const token = localStorage.getItem("discord_token");
 		if (token) {
-			window.open(`/dash.html?token=${encodeURIComponent(token)}`, '_blank');
+			window.open(`/dash.html?token=${encodeURIComponent(token)}`, "_blank");
 		} else {
-			window.open('/dash.html', '_blank');
+			window.open("/dash.html", "_blank");
 		}
 	}
 

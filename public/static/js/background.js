@@ -106,22 +106,18 @@ function generateFallingStars(container, config = {}) {
 		const star = document.createElement("div");
 		star.className = "star";
 
-		// Position stars using "second grid" concept - spawn in 3 quadrants around visible top-left
 		let startX, startY;
-		const quadrant = Math.floor(Math.random() * 3); // 0, 1, or 2 for the 3 off-screen quadrants
+		const quadrant = Math.floor(Math.random() * 3);
 
 		if (quadrant === 0) {
-			// Top-left quadrant (off-screen)
-			startX = -25 + Math.random() * 25; // -25% to 0%
-			startY = -25 + Math.random() * 25; // -25% to 0%
+			startX = -25 + Math.random() * 25;
+			startY = -25 + Math.random() * 25;
 		} else if (quadrant === 1) {
-			// Top-right quadrant (off-screen)
-			startX = 0 + Math.random() * 25; // 0% to 25%
-			startY = -25 + Math.random() * 25; // -25% to 0%
+			startX = 0 + Math.random() * 25;
+			startY = -25 + Math.random() * 25;
 		} else {
-			// Bottom-left quadrant (off-screen)
-			startX = -25 + Math.random() * 25; // -25% to 0%
-			startY = 0 + Math.random() * 25; // 0% to 25%
+			startX = -25 + Math.random() * 25;
+			startY = 0 + Math.random() * 25;
 		}
 
 		const duration =
@@ -130,9 +126,8 @@ function generateFallingStars(container, config = {}) {
 			starConfig.animationDuration.min;
 		const delay = Math.random() * duration;
 
-		// Add trail properties similar to animation.js
-		const trailLength = 70 + Math.random() * 110; // 70-180px range
-		const trailThickness = 2 + Math.random() * 2; // 2-4px range
+		const trailLength = 70 + Math.random() * 110;
+		const trailThickness = 2 + Math.random() * 2;
 		const trailColorStartRGB = "255, 255, 255";
 		const trailGradient = `linear-gradient(to top left, rgba(${trailColorStartRGB}, 0.8), rgba(${trailColorStartRGB}, 0))`;
 
