@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.1.8 – 2025-07-20
+
+- enhanced background effects with larger cogs and improved star animations
+- integrated Tailwind CSS with PostCSS configuration and styling
+- added .gitignore to exclude IDE-specific files and local data sources
+- refactored timer.html to project structure and remade demo timer page
+- integrated timer with project file structure
+- improved timer functionality
+- set auto color to black
+- added loading screen and error handling for admin dashboard initialization
+- updated tools/mergeGrids.cjs
+
 ## 0.1.7.3 – 2025-07-06
 
 - grid refresh now broadcasts to all connected users -working on removing requirement for manual refresh when this is done
