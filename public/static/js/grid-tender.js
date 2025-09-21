@@ -32,11 +32,15 @@ class GridTender {
 	 */
 	detectDevice() {
 		const userAgent = navigator.userAgent;
-		if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)) {
-			if (/iPad|tablet/i.test(userAgent)) return 'tablet';
-			return 'mobile';
+		if (
+			/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+				userAgent,
+			)
+		) {
+			if (/iPad|tablet/i.test(userAgent)) return "tablet";
+			return "mobile";
 		}
-		return 'desktop';
+		return "desktop";
 	}
 
 	/**
@@ -138,7 +142,7 @@ class GridTender {
 		this.isAdmin = false;
 		localStorage.removeItem("discord_token");
 		localStorage.removeItem("user_data");
-		
+
 		if (this.adminPanelElement) {
 			this.adminPanelElement.classList.add("hidden");
 			this.adminPanelCollapsed = true;
@@ -249,7 +253,7 @@ class GridTender {
 	}
 
 	/**
-	 * Enhanced pixel placement with whitelist checking
+	 * canPlacePixel + whitelist
 	 */
 	async placePixel(x, y, color) {
 		const canPlace = this.canPlacePixel();
@@ -260,7 +264,9 @@ class GridTender {
 		}
 
 		try {
-			const sessionId = window.sessionId || `session_${Math.random().toString(36).substring(2, 11)}${Date.now().toString(36)}`;
+			const sessionId =
+				window.sessionId ||
+				`session_${Math.random().toString(36).substring(2, 11)}${Date.now().toString(36)}`;
 			const sessionStartTime = window.sessionStartTime || Date.now();
 			const placementCount = window.placementCount || 1;
 			const currentTime = Date.now();
@@ -273,7 +279,7 @@ class GridTender {
 				"X-Session-Duration": (currentTime - sessionStartTime).toString(),
 				"X-Placement-Count": placementCount.toString(),
 				"X-Time-To-First": "0",
-				"X-Device-Type": this.detectDevice()
+				"X-Device-Type": this.detectDevice(),
 			};
 
 			if (this.userToken) {
@@ -473,7 +479,6 @@ class GridTender {
 
 		this.adminToggleBtn = document.getElementById("adminToggleBtn");
 
-
 		this.addStyles();
 		this.updateUI();
 	}
@@ -573,9 +578,6 @@ class GridTender {
 		this.setupDragging();
 	}
 
-	/**
-	 * Insert UI elements into the page
-	 */
 	/**
 	 * Add CSS styles for GridTender UI
 	 */
@@ -1434,11 +1436,11 @@ class GridTender {
 	 * Open the full admin dashboard
 	 */
 	openDashboard() {
-		const token = localStorage.getItem('discord_token');
+		const token = localStorage.getItem("discord_token");
 		if (token) {
-			window.open(`/dash.html?token=${encodeURIComponent(token)}`, '_blank');
+			window.open(`/dash.html?token=${encodeURIComponent(token)}`, "_blank");
 		} else {
-			window.open('/dash.html', '_blank');
+			window.open("/dash.html", "_blank");
 		}
 	}
 
@@ -1514,7 +1516,7 @@ class GridTender {
 	}
 
 	/**
-	 * Setup dragging functionality for the admin panel
+	 * Setup dragging (admin panel)
 	 */
 	setupDragging() {
 		if (!this.adminPanelElement) return;
@@ -1614,7 +1616,7 @@ class GridTender {
 }
 
 /**
- * Grid backup and restore functionality for GridTender
+ * Grid backup and restore
  */
 
 class GridBackup {

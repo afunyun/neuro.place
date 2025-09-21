@@ -1,112 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Dashboard - Neuro.Place</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round&display=block" rel="stylesheet" />
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="stylesheet" href="/static/css/dash.css" id="adminCSS">
-</head>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Round&display=block"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/style.css" />
+    <link rel="stylesheet" href="/static/css/dash.css" id="adminCSS" />
+  </head>
 
-<body>
+  <body>
     <div id="dashboardContainer" class="dashboard-container">
-        <div id="loadingScreen" class="loading-screen">
-            <div class="loading-content">
-                <div class="loading-spinner"></div>
-                <p>Loading admin dashboard...</p>
-            </div>
+      <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+          <div class="loading-spinner"></div>
+          <p>Loading admin dashboard...</p>
         </div>
+      </div>
     </div>
 
     <script>
-        console.log('Dashboard page loading...');
+      console.log("Dashboard page loading...");
 
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get('token') || localStorage.getItem('discord_token');
+      const urlParams = new URLSearchParams(window.location.search);
+      const token =
+        urlParams.get("token") || localStorage.getItem("discord_token");
 
-        console.log('Token found:', !!token);
+      console.log("Token found:", !!token);
 
-        if (token) {
-            try {
-                // Update CSS with token
-                const adminCSS = document.getElementById('adminCSS');
-                adminCSS.href = `/static/css/dash.css?token=${encodeURIComponent(token)}`;
+      if (token) {
+        try {
+          // Update CSS with token
+          const adminCSS = document.getElementById("adminCSS");
+          adminCSS.href = `/static/css/dash.css?token=${encodeURIComponent(
+            token
+          )}`;
 
-                // Create and load the admin JavaScript
-                const adminJS = document.createElement('script');
-                adminJS.src = `/static/js/dash.js?token=${encodeURIComponent(token)}`;
-                adminJS.type = 'module';
+          // Create and load the admin JavaScript
+          const adminJS = document.createElement("script");
+          adminJS.src = `/static/js/dash.js?token=${encodeURIComponent(token)}`;
+          adminJS.type = "module";
 
-                // Add error handling for script loading
-                adminJS.onerror = function (error) {
-                    console.error('Failed to load admin script:', error);
-                    document.getElementById('loadingScreen').innerHTML = `
+          // Add error handling for script loading
+          adminJS.onerror = function (error) {
+            console.error("Failed to load admin script:", error);
+            document.getElementById("loadingScreen").innerHTML = `
                         <div class="loading-content">
                             <p style="color: red;">Failed to load admin dashboard. Please refresh the page.</p>
                             <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Retry</button>
                         </div>
                     `;
-                };
+          };
 
-                adminJS.onload = function () {
-                    console.log('Admin script loaded successfully');
-                };
+          adminJS.onload = function () {
+            console.log("Admin script loaded successfully");
+          };
 
-                document.body.appendChild(adminJS);
-
-            } catch (error) {
-                console.error('Error setting up admin dashboard:', error);
-                document.getElementById('loadingScreen').innerHTML = `
+          document.body.appendChild(adminJS);
+        } catch (error) {
+          console.error("Error setting up admin dashboard:", error);
+          document.getElementById("loadingScreen").innerHTML = `
                     <div class="loading-content">
                         <p style="color: red;">Error loading admin dashboard: ${error.message}</p>
                         <button onclick="location.reload()" style="margin-top: 10px; padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">Retry</button>
                     </div>
                 `;
-            }
-        } else {
-            console.log('No token found, redirecting to filtered page');
-            window.location.href = '/filtered.html';
         }
+      } else {
+        console.log("No token found, redirecting to filtered page");
+        window.location.href = "/filtered.html";
+      }
     </script>
 
     <style>
-        .loading-screen {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: var(--bg-primary, #1a1a1a);
-            color: var(--text-primary, #ffffff);
+      .loading-screen {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: var(--bg-primary, #1a1a1a);
+        color: var(--text-primary, #ffffff);
+      }
+
+      .loading-content {
+        text-align: center;
+        padding: 2rem;
+      }
+
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #007bff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
 
-        .loading-content {
-            text-align: center;
-            padding: 2rem;
+        100% {
+          transform: rotate(360deg);
         }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
+      }
     </style>
-</body>
-
+  </body>
 </html>

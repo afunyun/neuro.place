@@ -31,7 +31,9 @@ function generateRandomCogs(container, config = {}) {
 	const existingCogs = container.querySelectorAll(
 		'.cog-container, [class*="cog"]',
 	);
-	existingCogs.forEach((cog) => cog.remove());
+	existingCogs.forEach((cog) => {
+		cog.remove();
+	});
 
 	for (let i = 0; i < cogConfig.count; i++) {
 		const cog = document.createElement("div");
@@ -66,7 +68,7 @@ function generateRandomCogs(container, config = {}) {
 
 		const delay =
 			Math.random() *
-				(cogConfig.animationDelay.max - cogConfig.animationDelay.min) +
+			(cogConfig.animationDelay.max - cogConfig.animationDelay.min) +
 			cogConfig.animationDelay.min;
 
 		cog.style.cssText = `
@@ -94,13 +96,15 @@ function generateRandomCogs(container, config = {}) {
 /**
  * random falling stars
  * @param {HTMLElement} container - which container to attach to
- * @param {Object} config - controls the falling stars
- */
 function generateFallingStars(container, config = {}) {
 	const starConfig = { ...DEFAULT_BACKGROUND_CONFIG.stars, ...config };
 
 	const existingStars = container.querySelectorAll(".star, .star-container");
-	existingStars.forEach((star) => star.remove());
+	existingStars.forEach((star) => {
+		star.remove();
+	});
+
+	for (let i = 0; i < starConfig.count; i++) {
 
 	for (let i = 0; i < starConfig.count; i++) {
 		const star = document.createElement("div");
@@ -126,7 +130,7 @@ function generateFallingStars(container, config = {}) {
 
 		const duration =
 			Math.random() *
-				(starConfig.animationDuration.max - starConfig.animationDuration.min) +
+			(starConfig.animationDuration.max - starConfig.animationDuration.min) +
 			starConfig.animationDuration.min;
 		const delay = Math.random() * duration;
 
@@ -137,16 +141,16 @@ function generateFallingStars(container, config = {}) {
 		const trailGradient = `linear-gradient(to top left, rgba(${trailColorStartRGB}, 0.8), rgba(${trailColorStartRGB}, 0))`;
 
 		star.style.cssText = `
-            left: ${startX}%;
-            top: ${startY}%;
-            width: ${starConfig.size.width}px;
-            height: ${starConfig.size.height}px;
-            animation-duration: ${duration}s;
-            animation-delay: ${delay}s;
-            --trail-length: ${trailLength}px;
-            --trail-thickness: ${trailThickness}px;
-            --trail-gradient: ${trailGradient};
-        `;
+			left: ${startX}%;
+			top: ${startY}%;
+			width: ${starConfig.size.width}px;
+			height: ${starConfig.size.height}px;
+			animation-duration: ${duration}s;
+			animation-delay: ${delay}s;
+			--trail-length: ${trailLength}px;
+			--trail-thickness: ${trailThickness}px;
+			--trail-gradient: ${trailGradient};
+		`;
 
 		container.appendChild(star);
 	}

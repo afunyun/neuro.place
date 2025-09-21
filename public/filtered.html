@@ -1,211 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Filtered - Neuro.Place</title>
-    <link rel="stylesheet" href="/static/css/dash.css">
+    <link rel="stylesheet" href="/static/css/dash.css" />
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000 url('/static/img/filtered.png') no-repeat center center;
-            background-size: cover;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        background: #000 url("/static/img/filtered.png") no-repeat center center;
+        background-size: cover;
+        color: #fff;
+        font-family: Arial, sans-serif;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
 
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            pointer-events: none;
-            z-index: 1;
-        }
+      body::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        pointer-events: none;
+        z-index: 1;
+      }
 
-        .message-container {
-            position: relative;
-            z-index: 2;
-        }
+      .message-container {
+        position: relative;
+        z-index: 2;
+      }
 
-        .credit {
-            position: fixed;
-            bottom: 10px;
-            right: 15px;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.7);
-            z-index: 3;
-        }
+      .credit {
+        position: fixed;
+        bottom: 10px;
+        right: 15px;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.7);
+        z-index: 3;
+      }
 
-        .credit a {
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-        }
+      .credit a {
+        color: rgba(255, 255, 255, 0.7);
+        text-decoration: none;
+      }
 
-        .credit a:hover {
-            color: rgba(255, 255, 255, 0.9);
-        }
+      .credit a:hover {
+        color: rgba(255, 255, 255, 0.9);
+      }
 
+      .filtered-text {
+        font-size: 3rem;
+        font-weight: bold;
+        text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff69b4, 0 0 60px #ff69b4;
+        color: #fff;
+        margin-bottom: 2rem;
+        text-align: center;
+      }
+
+      .message-container {
+        text-align: center;
+        max-width: 600px;
+        padding: 0 2rem;
+      }
+
+      .pen-test-message {
+        font-size: 1.2rem;
+        color: #ff69b4;
+        margin-bottom: 1.5rem;
+        opacity: 0.9;
+        line-height: 1.6;
+      }
+
+      .countdown {
+        font-size: 2rem;
+        color: #fff;
+        margin: 2rem 0;
+        font-weight: bold;
+        text-shadow: 0 0 10px #6366f1;
+      }
+
+      .links {
+        margin-top: 2rem;
+        opacity: 0;
+        transition: opacity 0.5s ease-in;
+      }
+
+      .links.visible {
+        opacity: 1;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 10px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 0 1rem;
+        transition: transform 0.2s;
+        font-size: 1.1rem;
+        font-weight: 500;
+      }
+
+      .btn img {
+        width: 1.2em;
+        height: 1.2em;
+        object-fit: contain;
+      }
+
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, #374151, #4b5563);
+      }
+
+      .btn-secondary:hover {
+        background: linear-gradient(135deg, #4b5563, #6b7280);
+      }
+
+      @media (max-width: 768px) {
         .filtered-text {
-            font-size: 3rem;
-            font-weight: bold;
-            text-shadow: 0 0 20px #ff69b4, 0 0 40px #ff69b4, 0 0 60px #ff69b4;
-            color: #fff;
-            margin-bottom: 2rem;
-            text-align: center;
-        }
-
-        .message-container {
-            text-align: center;
-            max-width: 600px;
-            padding: 0 2rem;
+          font-size: 2rem;
         }
 
         .pen-test-message {
-            font-size: 1.2rem;
-            color: #ff69b4;
-            margin-bottom: 1.5rem;
-            opacity: 0.9;
-            line-height: 1.6;
+          font-size: 1rem;
         }
 
         .countdown {
-            font-size: 2rem;
-            color: #fff;
-            margin: 2rem 0;
-            font-weight: bold;
-            text-shadow: 0 0 10px #6366f1;
-        }
-
-        .links {
-            margin-top: 2rem;
-            opacity: 0;
-            transition: opacity 0.5s ease-in;
-        }
-
-        .links.visible {
-            opacity: 1;
+          font-size: 1.5rem;
         }
 
         .btn {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 10px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 0 1rem;
-            transition: transform 0.2s;
-            font-size: 1.1rem;
-            font-weight: 500;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 0.5rem;
+          margin: 0.5rem auto;
+          width: 200px;
         }
-
-        .btn img {
-            width: 1.2em;
-            height: 1.2em;
-            object-fit: contain;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #374151, #4b5563);
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(135deg, #4b5563, #6b7280);
-        }
-
-        @media (max-width: 768px) {
-            .filtered-text {
-                font-size: 2rem;
-            }
-
-            .pen-test-message {
-                font-size: 1rem;
-            }
-
-            .countdown {
-                font-size: 1.5rem;
-            }
-
-            .btn {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 0.5rem;
-                margin: 0.5rem auto;
-                width: 200px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="message-container">
-        <div class="filtered-text">Filtered.</div>
+      <div class="filtered-text">Filtered.</div>
 
-        <div class="pen-test-message">
-            Don't pen test, I'll cry
-            <br>
-        </div>
+      <div class="pen-test-message">
+        Don't pen test, I'll cry
+        <br />
+      </div>
 
-        <div class="countdown" id="countdown">10</div>
+      <div class="countdown" id="countdown">10</div>
 
-        <div class="links" id="links">
-            <a href="/" class="btn"><img src="/static/img/neuroHypers-2x.webp" alt="Home Homepage">Go Home</a>
-            <a href="/status.html" class="btn btn-secondary"><img src="static/img/hiyori-2x.webp"
-                    alt="Status Page">Status Page</a>
-        </div>
+      <div class="links" id="links">
+        <a href="/" class="btn"
+          ><img src="/static/img/neuroHypers-2x.webp" alt="Home Homepage" />Go
+          Home</a
+        >
+        <a href="/status.html" class="btn btn-secondary"
+          ><img src="static/img/hiyori-2x.webp" alt="Status Page" />Status
+          Page</a
+        >
+      </div>
     </div>
 
     <div class="credit">
-        original art by <a href="https://www.youtube.com/@kleffff" target="_blank">klef</a>
+      original art by
+      <a href="https://www.youtube.com/@kleffff" target="_blank">klef</a>
     </div>
 
     <script>
-        let timeLeft = 10;
-        const countdownEl = document.getElementById('countdown');
-        const linksEl = document.getElementById('links');
+      let timeLeft = 10;
+      const countdownEl = document.getElementById("countdown");
+      const linksEl = document.getElementById("links");
 
-        const timer = setInterval(() => {
-            timeLeft--;
-            countdownEl.textContent = timeLeft;
+      const timer = setInterval(() => {
+        timeLeft--;
+        countdownEl.textContent = timeLeft;
 
-            if (timeLeft <= 0) {
-                clearInterval(timer);
-                countdownEl.style.display = 'none';
-                linksEl.classList.add('visible');
-            }
-        }, 1000);
+        if (timeLeft <= 0) {
+          clearInterval(timer);
+          countdownEl.style.display = "none";
+          linksEl.classList.add("visible");
+        }
+      }, 1000);
 
-        // Show links immediately if user clicks anywhere
-        document.addEventListener('click', () => {
-            if (timeLeft > 0) {
-                clearInterval(timer);
-                countdownEl.style.display = 'none';
-                linksEl.classList.add('visible');
-            }
-        });
+      // Show links immediately if user clicks anywhere
+      document.addEventListener("click", () => {
+        if (timeLeft > 0) {
+          clearInterval(timer);
+          countdownEl.style.display = "none";
+          linksEl.classList.add("visible");
+        }
+      });
     </script>
-</body>
-
+  </body>
 </html>

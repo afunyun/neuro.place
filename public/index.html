@@ -1,421 +1,625 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <meta name="description"
-        content="A pixel placement app built by members of neuro-sama's discord community. See github.com/ytsodacan/neuro.place" />
+    <meta
+      name="description"
+      content="A pixel placement app built by members of neuro-sama's discord community. See github.com/ytsodacan/neuro.place"
+    />
     <title>Neuro.Place</title>
     <link rel="stylesheet" href="static/css/tailwind.css" />
     <link rel="stylesheet" href="static/css/style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round&display=block" rel="stylesheet" />
-    <script src="https://kit.fontawesome.com/9e042e5224.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=circle" />
-</head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Round&display=block"
+      rel="stylesheet"
+    />
+    <script
+      src="https://kit.fontawesome.com/9e042e5224.js"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=circle"
+    />
+  </head>
 
-<body class="flex flex-col">
+  <body class="flex flex-col">
     <header class="header">
-        <div class="relative container mx-auto px-6">
-            <div class="relative flex items-center justify-center">
-                <h1 class="mr-auto text-center">Neuro.Place</h1>
-                <div id="siteAnnouncement" class="site-announcement"></div>
-                <div class="ml-auto flex items-center gap-2">
-                    <button id="privacyStatementBtn"
-                        class="flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-blue-600 p-0 transition-colors hover:bg-blue-700"
-                        title="Privacy Statement">
-                        <span class="material-icons-round text-white" style="font-size: 16px;">shield</span>
-                    </button>
-                    <button id="adminToggleBtn"
-                        class="flex hidden h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-purple-600 p-0 transition-colors hover:bg-purple-700"
-                        title="Toggle Admin Panel">
-                        <span class="material-icons-round text-white"
-                            style="font-size: 16px;">admin_panel_settings</span>
-                    </button>
-                    <button id="openSettingsBtn"
-                        class="ml-auto flex h-8 w-8 items-center justify-center overflow-hidden rounded-full bg-gray-500 p-0">
-                        <img id="userAvatar" class="h-full w-full rounded-full object-cover" alt="User Avatar"
-                            src="static/img/user.png" />
-                    </button>
-                </div>
-            </div>
+      <div class="relative mx-auto px-6 container">
+        <div class="relative flex justify-center items-center">
+          <h1 class="mr-auto text-center">Neuro.Place</h1>
+          <div id="siteAnnouncement" class="site-announcement"></div>
+          <div class="flex items-center gap-2 ml-auto">
+            <button
+              id="privacyStatementBtn"
+              class="flex justify-center items-center bg-blue-600 hover:bg-blue-700 p-0 rounded-full w-8 h-8 overflow-hidden transition-colors"
+              title="Privacy Statement"
+            >
+              <span
+                class="text-white material-icons-round"
+                style="font-size: 16px"
+                >shield</span
+              >
+            </button>
+            <button
+              id="adminToggleBtn"
+              class="hidden flex justify-center items-center bg-purple-600 hover:bg-purple-700 p-0 rounded-full w-8 h-8 overflow-hidden transition-colors"
+              title="Toggle Admin Panel"
+            >
+              <span
+                class="text-white material-icons-round"
+                style="font-size: 16px"
+                >admin_panel_settings</span
+              >
+            </button>
+            <button
+              id="openSettingsBtn"
+              class="flex justify-center items-center bg-gray-500 ml-auto p-0 rounded-full w-8 h-8 overflow-hidden"
+            >
+              <img
+                id="userAvatar"
+                class="rounded-full w-full h-full object-cover"
+                alt="User Avatar"
+                src="static/img/user.png"
+              />
+            </button>
+          </div>
         </div>
+      </div>
     </header>
 
     <div class="flex-container">
-        <aside class="left-panel">
-            <div class="panel-section collapsible-panel" data-panel="liveView">
-                <h3 class="section-title collapsible-header">
-                    <span class="material-icons-round" style="font-size: 1rem;">visibility</span>
-                    Live View
-                    <button class="panel-toggle ml-auto">
-                        <span class="material-icons-round" style="font-size: 16px;">expand_more</span>
-                    </button>
-                </h3>
-                <div class="panel-content">
-                    <div class="live-view-container">
-                        <canvas id="liveViewCanvas"></canvas>
-                    </div>
-                </div>
+      <aside class="left-panel">
+        <div class="panel-section collapsible-panel" data-panel="liveView">
+          <h3 class="section-title collapsible-header">
+            <span class="material-icons-round" style="font-size: 1rem"
+              >visibility</span
+            >
+            Live View
+            <button class="ml-auto panel-toggle">
+              <span class="material-icons-round" style="font-size: 16px"
+                >expand_more</span
+              >
+            </button>
+          </h3>
+          <div class="panel-content">
+            <div class="live-view-container">
+              <canvas id="liveViewCanvas"></canvas>
             </div>
+          </div>
+        </div>
 
-            <div class="panel-section collapsible-panel" data-panel="activeUsers">
-                <h3 class="section-title collapsible-header">
-                    <span class="material-icons-round" style="font-size: 1rem;">people</span>
-                    Active Users
-                    <span id="activeUsersCount" class="ml-2 text-sm text-gray-500">(0)</span>
-                    <button class="panel-toggle ml-auto">
-                        <span class="material-icons-round" style="font-size: 16px;">expand_more</span>
-                    </button>
-                </h3>
-                <div class="panel-content">
-                    <div id="activeUsersList" class="active-users-container">
-                        <div class="text-sm text-gray-500">Loading...</div>
-                    </div>
-                </div>
+        <div class="panel-section collapsible-panel" data-panel="activeUsers">
+          <h3 class="section-title collapsible-header">
+            <span class="material-icons-round" style="font-size: 1rem"
+              >people</span
+            >
+            Active Users
+            <span id="activeUsersCount" class="ml-2 text-gray-500 text-sm"
+              >(0)</span
+            >
+            <button class="ml-auto panel-toggle">
+              <span class="material-icons-round" style="font-size: 16px"
+                >expand_more</span
+              >
+            </button>
+          </h3>
+          <div class="panel-content">
+            <div id="activeUsersList" class="active-users-container">
+              <div class="text-gray-500 text-sm">Loading...</div>
             </div>
+          </div>
+        </div>
 
-            <div class="panel-section pixel-log-section collapsible-panel" data-panel="pixelLog">
-                <h3 class="section-title collapsible-header">
-                    <span class="material-icons-round" style="font-size: 1rem;">history</span>
-                    Pixel Log
-                    <span id="connectionStatus" class="connection-status disconnected" title="Disconnected">!</span>
-                    <button class="panel-toggle ml-auto">
-                        <span class="material-icons-round" style="font-size: 16px;">expand_more</span>
-                    </button>
-                </h3>
-                <div class="panel-content">
-                    <div id="pixelChatLog" class="pixel-log"></div>
-                </div>
-            </div>
+        <div
+          class="panel-section pixel-log-section collapsible-panel"
+          data-panel="pixelLog"
+        >
+          <h3 class="section-title collapsible-header">
+            <span class="material-icons-round" style="font-size: 1rem"
+              >history</span
+            >
+            Pixel Log
+            <span
+              id="connectionStatus"
+              class="connection-status disconnected"
+              title="Disconnected"
+              >!</span
+            >
+            <button class="ml-auto panel-toggle">
+              <span class="material-icons-round" style="font-size: 16px"
+                >expand_more</span
+              >
+            </button>
+          </h3>
+          <div class="panel-content">
+            <div id="pixelChatLog" class="pixel-log"></div>
+          </div>
+        </div>
+      </aside>
 
-        </aside>
-
-        <main class="main-content" id="main-content">
-            <div class="canvas-container">
-                <canvas id="neuroCanvas"
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></canvas>
-                <canvas id="neuroHighlightCanvas"
-                    style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
-            </div>
-        </main>
+      <main class="main-content" id="main-content">
+        <div class="canvas-container">
+          <canvas
+            id="neuroCanvas"
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+            "
+          ></canvas>
+          <canvas
+            id="neuroHighlightCanvas"
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              pointer-events: none;
+              z-index: 1;
+            "
+          ></canvas>
+        </div>
+      </main>
     </div>
 
     <div id="settingsModal" class="modal-overlay">
-        <div class="settings-window">
-            <h2 class="mb-6 text-2xl font-bold">Settings</h2>
+      <div class="settings-window">
+        <h2 class="mb-6 font-bold text-2xl">Settings</h2>
 
-            <button id="closeSettingsBtn" class="close-button">
-                <i class="fa-solid fa-x"></i>
+        <button id="closeSettingsBtn" class="close-button">
+          <i class="fa-solid fa-x"></i>
+        </button>
+
+        <div class="space-y-4">
+          <div class="setting-item">
+            <button id="discordLoginBtn" class="w-full btn btn-primary">
+              Login with Discord
             </button>
-
-            <div class="space-y-4">
-                <div class="setting-item">
-                    <button id="discordLoginBtn" class="btn btn-primary w-full">Login with Discord</button>
-                    <div id="userInfo" class="mt-4 hidden items-center space-x-2">
-                        <div class="flex w-full items-center justify-between">
-                            <div class="flex flex-col">
-                                <span id="userName" class="text-primary block font-semibold"></span>
-                                <div id="gridTenderStatus" class="grid-tender-status-inline mt-1">
-                                    <div class="status-label-small">Status</div>
-                                    <div class="status-value" id="authStatusText">stop trying to hack the site buddy
-                                    </div>
-                                </div>
-                            </div>
-                            <button id="logoutBtn" class="btn btn-danger">
-                                <span class="material-icons-round" style="font-size: 1rem;">logout</span>
-                                Logout
-                            </button>
-                        </div>
+            <div id="userInfo" class="hidden items-center space-x-2 mt-4">
+              <div class="flex justify-between items-center w-full">
+                <div class="flex flex-col">
+                  <span
+                    id="userName"
+                    class="block font-semibold text-primary"
+                  ></span>
+                  <div
+                    id="gridTenderStatus"
+                    class="grid-tender-status-inline mt-1"
+                  >
+                    <div class="status-label-small">Status</div>
+                    <div class="status-value" id="authStatusText">
+                      stop trying to hack the site buddy
                     </div>
+                  </div>
                 </div>
-
-                <div class="setting-item">
-                    <label for="darkModeToggle" class="text-text-primary">Dark Mode Toggle</label>
-                    <button id="themeToggleBtn" class="btn btn-secondary btn-icon"
-                        style="position: absolute; right: 21px; z-index: 10;" title="Toggle theme">
-                        <span class="material-icons-round">light_mode</span>
-                    </button>
-                </div>
-                <div class="setting-item">
-                    <label for="euPrivacyOptOut" class="text-text-primary">Disable Analytics & Tracking
-                        PLACEHOLDER</label>
-                    <input type="checkbox" id="euPrivacyOptOut" class="input-field" />
-                </div>
-
-
+                <button id="logoutBtn" class="btn btn-danger">
+                  <span class="material-icons-round" style="font-size: 1rem"
+                    >logout</span
+                  >
+                  Logout
+                </button>
+              </div>
             </div>
+          </div>
 
-            <div class="mt-8 flex justify-end">
-                <div class="credits">
-                    <div>started by <a href="https://github.com/ytsodacan" target="_blank">ytsodacan</a></div>
-                    <div style="font-size: 0.6875rem; margin-top: 0.25rem;">much sleep lost by <a
-                            href="https://github.com/afunyun" target="_blank">afunyun</a> • <span
-                            class="text-primary">style help by <a href="https://github.com/igglyn"
-                                target="_blank">igglyn</a></span></div>
-                </div>
-            </div>
+          <div class="setting-item">
+            <label for="darkModeToggle" class="text-text-primary"
+              >Dark Mode Toggle</label
+            >
+            <button
+              id="themeToggleBtn"
+              class="btn btn-secondary btn-icon"
+              style="position: absolute; right: 21px; z-index: 10"
+              title="Toggle theme"
+            >
+              <span class="material-icons-round">light_mode</span>
+            </button>
+          </div>
+          <div class="setting-item">
+            <label for="euPrivacyOptOut" class="text-text-primary"
+              >Disable Analytics & Tracking PLACEHOLDER</label
+            >
+            <input type="checkbox" id="euPrivacyOptOut" class="input-field" />
+          </div>
         </div>
+
+        <div class="flex justify-end mt-8">
+          <div class="credits">
+            <div>
+              started by
+              <a href="https://github.com/ytsodacan" target="_blank"
+                >ytsodacan</a
+              >
+            </div>
+            <div style="font-size: 0.6875rem; margin-top: 0.25rem">
+              much sleep lost by
+              <a href="https://github.com/afunyun" target="_blank">afunyun</a> •
+              <span class="text-primary"
+                >style help by
+                <a href="https://github.com/igglyn" target="_blank"
+                  >igglyn</a
+                ></span
+              >
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="privacyModal" class="modal-overlay">
-        <div class="settings-window" style="max-width: 800px; max-height: 80vh; overflow-y: auto;">
-            <h2 class="mb-6 text-2xl font-bold">Privacy Statement</h2>
+      <div
+        class="settings-window"
+        style="max-width: 800px; max-height: 80vh; overflow-y: auto"
+      >
+        <h2 class="mb-6 font-bold text-2xl">Privacy Statement</h2>
 
-            <button id="closePrivacyBtn" class="close-button">
-                <i class="fa-solid fa-x"></i>
-            </button>
+        <button id="closePrivacyBtn" class="close-button">
+          <i class="fa-solid fa-x"></i>
+        </button>
 
-            <div class="space-y-6 text-sm leading-relaxed">
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">About this file</h3>
-                    <p>This privacy policy describes how we handle user data in the Neurosama.place Pixel Placement App,
-                        focusing on analytics and active user tracking. From now on, we will refer to this app as "the
-                        App".</p>
-                    <p class="mt-2">It applies to your use of the App, including any data collected through analytics
-                        and active user features.</p>
-                </div>
+        <div class="space-y-6 text-sm leading-relaxed">
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">About this file</h3>
+            <p>
+              This privacy policy describes how we handle user data in the
+              Neurosama.place Pixel Placement App, focusing on analytics and
+              active user tracking. From now on, we will refer to this app as
+              "the App".
+            </p>
+            <p class="mt-2">
+              It applies to your use of the App, including any data collected
+              through analytics and active user features.
+            </p>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">At a glance examples</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li><strong>Analytics</strong>: We track pixel placements, user sessions, and authentication
-                            flows to improve the App.</li>
-                        <li><strong>Active Users</strong>: We display real-time active users to enhance community
-                            engagement.</li>
-                    </ul>
-                    <p class="mt-2">For the purposes of this policy, "we", "us", and "our" refer to the developers and
-                        operators of the App. "User", "you", and "your" refer to anyone who uses the App. Details about
-                        how we collect, use, and protect your data are outlined below.</p>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">At a glance examples</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                <strong>Analytics</strong>: We track pixel placements, user
+                sessions, and authentication flows to improve the App.
+              </li>
+              <li>
+                <strong>Active Users</strong>: We display real-time active users
+                to enhance community engagement.
+              </li>
+            </ul>
+            <p class="mt-2">
+              For the purposes of this policy, "we", "us", and "our" refer to
+              the developers and operators of the App. "User", "you", and "your"
+              refer to anyone who uses the App. Details about how we collect,
+              use, and protect your data are outlined below.
+            </p>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">Data Collection</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li><strong>Pixel Placement Events</strong>: We collect data on pixel placements, including
-                            coordinates, device type, input method, and session details.</li>
-                        <li><strong>User Session Events</strong>: We track user authentication flows, including session
-                            start, authentication completion, and session end.</li>
-                        <li><strong>Device Information</strong>: We collect device type (mobile, desktop, tablet) and
-                            input method (spacebar, button, touch)</li>
-                        <li><strong>User IDs</strong>: We hash user IDs for privacy, truncating to 8 characters</li>
-                        <li><strong>Session IDs</strong>: Unique per browser session to track user activity without
-                            storing PII</li>
-                    </ul>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">Data Collection</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                <strong>Pixel Placement Events</strong>: We collect data on
+                pixel placements, including coordinates, device type, input
+                method, and session details.
+              </li>
+              <li>
+                <strong>User Session Events</strong>: We track user
+                authentication flows, including session start, authentication
+                completion, and session end.
+              </li>
+              <li>
+                <strong>Device Information</strong>: We collect device type
+                (mobile, desktop, tablet) and input method (spacebar, button,
+                touch)
+              </li>
+              <li>
+                <strong>User IDs</strong>: We hash user IDs for privacy,
+                truncating to 8 characters
+              </li>
+              <li>
+                <strong>Session IDs</strong>: Unique per browser session to
+                track user activity without storing PII
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">Data Usage</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li><strong>Analytics</strong>: We use the collected data to analyze user behavior, improve the
-                            App, and generate reports on user engagement.</li>
-                        <li><strong>Active Users Display</strong>: We show real-time active users to enhance community
-                            interaction, including usernames, device types, and recent activity.</li>
-                        <li><strong>Historical Analysis</strong>: We may use aggregated data for long-term trends and
-                            insights, but never with personally identifiable information.</li>
-                    </ul>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">Data Usage</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                <strong>Analytics</strong>: We use the collected data to analyze
+                user behavior, improve the App, and generate reports on user
+                engagement.
+              </li>
+              <li>
+                <strong>Active Users Display</strong>: We show real-time active
+                users to enhance community interaction, including usernames,
+                device types, and recent activity.
+              </li>
+              <li>
+                <strong>Historical Analysis</strong>: We may use aggregated data
+                for long-term trends and insights, but never with personally
+                identifiable information.
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">Data Retention</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li><strong>Auto-Cleanup</strong>: Old data is automatically cleaned up after 30 days to ensure
-                            we do not retain unnecessary information.</li>
-                        <li><strong>Session Data</strong>: Active user data is retained for 5 minutes to provide
-                            real-time updates, after which it is removed.</li>
-                        <li><strong>No Persistent Storage</strong>: We do not store user activity persistently; all data
-                            is transient and used only for real-time features.</li>
-                    </ul>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">Data Retention</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                <strong>Auto-Cleanup</strong>: Old data is automatically cleaned
+                up after 30 days to ensure we do not retain unnecessary
+                information.
+              </li>
+              <li>
+                <strong>Session Data</strong>: Active user data is retained for
+                5 minutes to provide real-time updates, after which it is
+                removed.
+              </li>
+              <li>
+                <strong>No Persistent Storage</strong>: We do not store user
+                activity persistently; all data is transient and used only for
+                real-time features.
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">User Control</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li><strong>Opt-Out</strong>: Users can opt-out of analytics and active user tracking at any
-                            time. This will disable data collection for their sessions.</li>
-                        <li><strong>Data Access</strong>: Users can request access to their data or request deletion of
-                            their data at any time.</li>
-                        <li><strong>Consent</strong>: Users are prompted to consent to data collection before
-                            authenticating, ensuring they are aware of what data is being collected and how it will be
-                            used.</li>
-                    </ul>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">User Control</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                <strong>Opt-Out</strong>: Users can opt-out of analytics and
+                active user tracking at any time. This will disable data
+                collection for their sessions.
+              </li>
+              <li>
+                <strong>Data Access</strong>: Users can request access to their
+                data or request deletion of their data at any time.
+              </li>
+              <li>
+                <strong>Consent</strong>: Users are prompted to consent to data
+                collection before authenticating, ensuring they are aware of
+                what data is being collected and how it will be used.
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">Security</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li><strong>Data Protection</strong>: We implement industry-standard security measures to
-                            protect user data, including encryption in transit and at rest.</li>
-                        <li><strong>Access Control</strong>: Only authorized personnel have access to analytics data,
-                            and all access is logged for auditing purposes.</li>
-                        <li><strong>No PII Storage</strong>: We do not store personally identifiable information (PII)
-                            in our analytics events, ensuring user privacy is maintained.</li>
-                    </ul>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">Security</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                <strong>Data Protection</strong>: We implement industry-standard
+                security measures to protect user data, including encryption in
+                transit and at rest.
+              </li>
+              <li>
+                <strong>Access Control</strong>: Only authorized personnel have
+                access to analytics data, and all access is logged for auditing
+                purposes.
+              </li>
+              <li>
+                <strong>No PII Storage</strong>: We do not store personally
+                identifiable information (PII) in our analytics events, ensuring
+                user privacy is maintained.
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">Transparency</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li><strong>Clear Documentation</strong>: This privacy policy is available to all users,
-                            explaining how data is collected, used, and retained.</li>
-                        <li><strong>Prompt Updates</strong>: We will update this policy as needed to reflect changes in
-                            our data practices or legal requirements.</li>
-                        <li><strong>User Notifications</strong>: Users will be notified of significant changes to this
-                            policy via in-app notifications, as we do not collect any other means of contact (e.g.,
-                            email).</li>
-                    </ul>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">Transparency</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                <strong>Clear Documentation</strong>: This privacy policy is
+                available to all users, explaining how data is collected, used,
+                and retained.
+              </li>
+              <li>
+                <strong>Prompt Updates</strong>: We will update this policy as
+                needed to reflect changes in our data practices or legal
+                requirements.
+              </li>
+              <li>
+                <strong>User Notifications</strong>: Users will be notified of
+                significant changes to this policy via in-app notifications, as
+                we do not collect any other means of contact (e.g., email).
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">Compliance</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li><strong>GDPR Compliance</strong>: We comply with GDPR requirements for data collection and
-                            processing, including user consent and data access rights.</li>
-                        <li><strong>Other Legal Obligations</strong>: We will comply with any legal requests for data
-                            access
-                            or deletion as required by law, while ensuring user privacy is maintained to the greatest
-                            extent possible.</li>
-                    </ul>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">Compliance</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                <strong>GDPR Compliance</strong>: We comply with GDPR
+                requirements for data collection and processing, including user
+                consent and data access rights.
+              </li>
+              <li>
+                <strong>Other Legal Obligations</strong>: We will comply with
+                any legal requests for data access or deletion as required by
+                law, while ensuring user privacy is maintained to the greatest
+                extent possible.
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">Contact Information</h3>
-                    <ul class="list-inside list-disc space-y-1">
-                        <li>For any questions or concerns about this privacy policy, please contact us via the in-app
-                            credits; all maintainers are listed with contact information in the settings menu. You may
-                            also reach out via discord, specifically the Neuro-sama community server or the Neuro.place
-                            server itself.</li>
-                        <li>We are committed to addressing any privacy concerns promptly and transparently.</li>
-                    </ul>
-                </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">Contact Information</h3>
+            <ul class="space-y-1 list-disc list-inside">
+              <li>
+                For any questions or concerns about this privacy policy, please
+                contact us via the in-app credits; all maintainers are listed
+                with contact information in the settings menu. You may also
+                reach out via discord, specifically the Neuro-sama community
+                server or the Neuro.place server itself.
+              </li>
+              <li>
+                We are committed to addressing any privacy concerns promptly and
+                transparently.
+              </li>
+            </ul>
+          </div>
 
-                <div>
-                    <h3 class="mb-2 text-lg font-semibold">Summary</h3>
-                    <p>This privacy policy outlines how the App collects, uses, and protects user data, focusing on
-                        analytics and active user tracking. We prioritize user privacy, data security, and transparency
-                        in our practices. By using the App, you agree to the terms outlined in this policy. If you do
-                        not agree with these terms, please do not use the App.</p>
-                </div>
-            </div>
+          <div>
+            <h3 class="mb-2 font-semibold text-lg">Summary</h3>
+            <p>
+              This privacy policy outlines how the App collects, uses, and
+              protects user data, focusing on analytics and active user
+              tracking. We prioritize user privacy, data security, and
+              transparency in our practices. By using the App, you agree to the
+              terms outlined in this policy. If you do not agree with these
+              terms, please do not use the App.
+            </p>
+          </div>
         </div>
+      </div>
     </div>
 
     <footer class="footer">
-        <div class="controls-container flex justify-center">
-            <div id="bottomControls" class="control-group">
-                <span class="control-label">Color</span>
-                <div class="color-picker-wrapper">
-                    <input type="color" id="colorPicker" value="#000000" />
-                </div>
-                <button id="placePixelBtn" class="btn btn-primary">
-                    <span class="material-icons-round" style="font-size: 1.125rem;">add</span>
-                    Place Pixel
-                </button>
-            </div>
-
-            <div class="coords-display absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" id="selectedCoords">
-                No pixel selected</div>
-
-            <div class="control-group zoom ml-auto">
-                <button id="zoomOutBtn" class="btn btn-secondary btn-icon zoom-out" title="Zoom out">
-                    <span class="material-icons-round">zoom_out</span>
-                </button>
-                <button id="zoomInBtn" class="btn btn-secondary btn-icon zoom-in" title="Zoom in">
-                    <span class="material-icons-round">zoom_in</span>
-                </button>
-            </div>
+      <div class="flex justify-center controls-container">
+        <div id="bottomControls" class="control-group">
+          <span class="control-label">Color</span>
+          <div class="color-picker-wrapper">
+            <input type="color" id="colorPicker" value="#000000" />
+          </div>
+          <button id="placePixelBtn" class="btn btn-primary">
+            <span class="material-icons-round" style="font-size: 1.125rem"
+              >add</span
+            >
+            Place Pixel
+          </button>
         </div>
+
+        <div
+          class="top-1/2 left-1/2 absolute -translate-x-1/2 -translate-y-1/2 coords-display"
+          id="selectedCoords"
+        >
+          No pixel selected
+        </div>
+
+        <div class="control-group ml-auto zoom">
+          <button
+            id="zoomOutBtn"
+            class="btn btn-secondary btn-icon zoom-out"
+            title="Zoom out"
+          >
+            <span class="material-icons-round">zoom_out</span>
+          </button>
+          <button
+            id="zoomInBtn"
+            class="btn btn-secondary btn-icon zoom-in"
+            title="Zoom in"
+          >
+            <span class="material-icons-round">zoom_in</span>
+          </button>
+        </div>
+      </div>
     </footer>
 
     <script type="module" src="static/js/script.js"></script>
     <script src="static/js/grid-tender.js"></script>
     <script>
-        window.GRID_TENDER_ADMIN_IDS = [];
+      window.GRID_TENDER_ADMIN_IDS = [];
     </script>
     <script>
-        const openSettingsBtn = document.getElementById('openSettingsBtn');
-        const settingsModal = document.getElementById('settingsModal');
-        const closeSettingsBtn = document.getElementById('closeSettingsBtn');
+      const openSettingsBtn = document.getElementById("openSettingsBtn");
+      const settingsModal = document.getElementById("settingsModal");
+      const closeSettingsBtn = document.getElementById("closeSettingsBtn");
 
-        function openModal() {
-            settingsModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+      function openModal() {
+        settingsModal.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal() {
+        settingsModal.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      openSettingsBtn.addEventListener("click", openModal);
+      closeSettingsBtn.addEventListener("click", closeModal);
+
+      settingsModal.addEventListener("click", (event) => {
+        if (event.target === settingsModal) {
+          closeModal();
         }
+      });
 
-        function closeModal() {
-            settingsModal.classList.remove('active');
-            document.body.style.overflow = '';
+      document.addEventListener("keydown", (event) => {
+        if (
+          event.key === "Escape" &&
+          settingsModal.classList.contains("active")
+        ) {
+          closeModal();
         }
+        if (
+          event.key === "Escape" &&
+          privacyModal.classList.contains("active")
+        ) {
+          closePrivacyModal();
+        }
+      });
 
-        openSettingsBtn.addEventListener('click', openModal);
-        closeSettingsBtn.addEventListener('click', closeModal);
+      const privacyStatementBtn = document.getElementById(
+        "privacyStatementBtn"
+      );
+      const privacyModal = document.getElementById("privacyModal");
+      const closePrivacyBtn = document.getElementById("closePrivacyBtn");
 
-        settingsModal.addEventListener('click', (event) => {
-            if (event.target === settingsModal) {
-                closeModal();
-            }
+      function openPrivacyModal() {
+        privacyModal.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closePrivacyModal() {
+        privacyModal.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      privacyStatementBtn.addEventListener("click", openPrivacyModal);
+      closePrivacyBtn.addEventListener("click", closePrivacyModal);
+
+      privacyModal.addEventListener("click", (event) => {
+        if (event.target === privacyModal) {
+          closePrivacyModal();
+        }
+      });
+
+      const discordLoginBtn = document.getElementById("discordLoginBtn");
+      if (discordLoginBtn) {
+        discordLoginBtn.addEventListener("click", () => {
+          if (window.initiateDiscordOAuth) {
+            window.initiateDiscordOAuth();
+          } else {
+            console.error(
+              "initiateDiscordOAuth function not found. Was script.js loaded correctly?"
+            );
+            alert("Could not initiate login. Please try refreshing the page.");
+          }
         });
+      }
 
-        document.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && settingsModal.classList.contains('active')) {
-                closeModal();
-            }
-            if (event.key === 'Escape' && privacyModal.classList.contains('active')) {
-                closePrivacyModal();
-            }
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", () => {
+          if (window.logout) {
+            window.logout();
+          } else {
+            console.error(
+              "logout function not found. Was script.js loaded correctly?"
+            );
+            alert("Could not initiate logout. Please try refreshing the page.");
+          }
         });
-
-        const privacyStatementBtn = document.getElementById('privacyStatementBtn');
-        const privacyModal = document.getElementById('privacyModal');
-        const closePrivacyBtn = document.getElementById('closePrivacyBtn');
-
-        function openPrivacyModal() {
-            privacyModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closePrivacyModal() {
-            privacyModal.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-
-        privacyStatementBtn.addEventListener('click', openPrivacyModal);
-        closePrivacyBtn.addEventListener('click', closePrivacyModal);
-
-        privacyModal.addEventListener('click', (event) => {
-            if (event.target === privacyModal) {
-                closePrivacyModal();
-            }
-        });
-
-
-        const discordLoginBtn = document.getElementById('discordLoginBtn');
-        if (discordLoginBtn) {
-            discordLoginBtn.addEventListener('click', () => {
-                if (window.initiateDiscordOAuth) {
-                    window.initiateDiscordOAuth();
-                } else {
-                    console.error('initiateDiscordOAuth function not found. Was script.js loaded correctly?');
-                    alert('Could not initiate login. Please try refreshing the page.');
-                }
-            });
-        }
-
-        const logoutBtn = document.getElementById('logoutBtn');
-        if (logoutBtn) {
-            logoutBtn.addEventListener('click', () => {
-                if (window.logout) {
-                    window.logout();
-                } else {
-                    console.error('logout function not found. Was script.js loaded correctly?');
-                    alert('Could not initiate logout. Please try refreshing the page.');
-                }
-            });
-        }
+      }
     </script>
-</body>
-
+  </body>
 </html>
