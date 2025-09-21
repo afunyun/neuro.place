@@ -59,14 +59,13 @@ html {
 
 	background-color: transparent;
 	padding: 30px;
-	text-align: center;
 	width: 1000px;
 
 	max-width: 90vh;
 
 	box-sizing: border-box;
 
-	font-family: "First Coffee";
+	font-family: "First Coffee", sans-serif;
 }
 
 h1 {
