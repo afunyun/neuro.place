@@ -929,7 +929,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		const touch2 = event.touches[1];
 		return Math.sqrt(
 			(touch2.clientX - touch1.clientX) ** 2 +
-			(touch2.clientY - touch1.clientY) ** 2,
+				(touch2.clientY - touch1.clientY) ** 2,
 		);
 	}
 
@@ -1571,7 +1571,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					deltaY: -1,
 					clientX: rect.left + canvas.clientWidth / 2,
 					clientY: rect.top + canvas.clientHeight / 2,
-					preventDefault: () => { },
+					preventDefault: () => {},
 				});
 			});
 		}
@@ -1582,7 +1582,7 @@ document.addEventListener("DOMContentLoaded", () => {
 					deltaY: 1,
 					clientX: rect.left + canvas.clientWidth / 2,
 					clientY: rect.top + canvas.clientHeight / 2,
-					preventDefault: () => { },
+					preventDefault: () => {},
 				});
 			});
 		}
@@ -1775,7 +1775,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 		}
 
-		showIfAdmin() { }
+		showIfAdmin() {}
 
 		createConsoleWindow() {
 			this.consoleWindow = document.createElement("div");

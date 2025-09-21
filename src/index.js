@@ -130,7 +130,7 @@ app.all(/grid.*/, (c) => c.redirect("/grid", 301));
 app.all(/pixel.*/, (c) => c.redirect("/pixel", 301));
 app.all(/ws.*/, (c) => c.redirect("/ws", 301));
 
-[
+const proxiedPaths = [
 	"/grid",
 	"/pixel",
 	"/ws",
@@ -162,12 +162,13 @@ app.all(/ws.*/, (c) => c.redirect("/ws", 301));
 	"/admin/grid-manipulate",
 	"/admin/grid-clear",
 	"/api/status-message",
-].forEach((p) =>
+];
+for (const p of proxiedPaths) {
 	app.all(p, (c) => {
 		const stub = c.env.GRID_STATE.get(c.env.GRID_STATE.idFromName("global"));
 		return stub.fetch(c.req.raw);
-	}),
-);
+	});
+}
 
 app.get("/dash.html", async (c) => {
 	const token = extractBearerToken(c.req) || c.req.query("token");
@@ -1072,7 +1073,7 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/api/active-users" && request.method === "GET") {
-			const timeWindow = parseInt(url.searchParams.get("window")) || 30000;
+			const timeWindow = parseInt(url.searchParams.get("window"), 10) || 30000;
 			const activeUsers = this.getActiveUsers(timeWindow);
 
 			return new Response(
@@ -1774,7 +1775,7 @@ export class GridDurableObject {
 			}
 
 			const limit = Math.min(
-				parseInt(url.searchParams.get("limit")) || 50,
+				parseInt(url.searchParams.get("limit"), 10) || 50,
 				100,
 			);
 			const logSlice = this.pixelPlacementLog.slice(0, limit);
