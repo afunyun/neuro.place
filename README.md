@@ -12,10 +12,13 @@ Website: [neurosama.place](https://neurosama.place)
 
 ## Features
 
-- **Collaborative Pixel Placement**: Users can place pixels on a shared grid.
-- **Discord OAuth Authentication**: Secure login using Discord oauth2
-- **Real-Time Updates**: Live updates via WebSocket for pixel placements & to display active connections
-- **Secure Admin Dashboard**: Server-side authentication following Cloudflare Workers security best practices
-- ~~**LATENCY**~~: uses a lot of async & generally maintains 200+ FPS with 500x500 grid on a decent machine. Can be lower on extremely high resolution displays, low-end devices, or on first visit.
+- faster than you might expect on both front and backend
+- real time updates for all connected
+- live logging of placements location & colour & who placed it
+- discord based authentication as well as additional, optional whitelist system
+- live admin functions & status page reporting for all elements of the system 
 
-Ongoing development. Join us on [Discord](https://discord.gg/Ba3H5Tjn) for updates and discussions.
+We have set up a [Discord](https://discord.gg/Ba3H5Tjn) in case there are any questions, requests, whatever you may want to be there for.
+The discord contains a webhook tracking pixel placements in real time, and also  a webhook for when a push is made to the main repo//build
+is sent to the worker to update the site itself on cloudflare.
+
