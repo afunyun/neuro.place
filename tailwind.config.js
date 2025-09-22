@@ -6,6 +6,9 @@ module.exports = {
 		"./src/**/*.js",
 		"./timer/**/*.html",
 		"./timer/**/*.js",
+		"./public/static/js/**/*.js",
+		"./public/index.html",
+		"./public/timer.html"
 	],
 	theme: {
 		extend: {},

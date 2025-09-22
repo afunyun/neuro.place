@@ -13,7 +13,7 @@ function setupBirthdayTimer() {
 		dayMonth = "09/30/",
 		birthdayStr = `${dayMonth}${yyyy}`;
 
-	const todayStr = `${mm}/${dd}/${yyyy}`;
+	const _todayStr = `${mm}/${dd}/${yyyy}`;
 	let birthdayDate = new Date(birthdayStr);
 	if (today > birthdayDate) {
 		birthdayStr = `${dayMonth}${nextYear}`;

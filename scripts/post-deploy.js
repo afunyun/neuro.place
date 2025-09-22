@@ -41,10 +41,10 @@ async function sendDeploymentWebhook() {
 
 			if (response.ok) {
 				const result = await response.json();
-				console.log("✅ Deployment webhook sent successfully:", result.message);
+				console.log("Deployment webhook sent successfully:", result.message);
 			} else {
 				const error = await response.json();
-				console.error("❌ Failed to send deployment webhook:", error.message);
+				console.error("Failed to send deployment webhook:", error.message);
 			}
 		} else if (DISCORD_DEPLOYMENT_WEBHOOK_URL) {
 			const webhookUrl = DISCORD_DEPLOYMENT_WEBHOOK_URL;
@@ -82,21 +82,21 @@ async function sendDeploymentWebhook() {
 
 			if (response.ok) {
 				console.log(
-					"✅ Deployment webhook sent successfully via direct Discord API",
+					"Deployment webhook sent successfully via direct Discord API",
 				);
 			} else {
 				console.error(
-					"❌ Failed to send deployment webhook via Discord API:",
+					"Failed to send deployment webhook via Discord API:",
 					response.status,
 				);
 			}
 		} else {
 			console.log(
-				"⚠️  No Discord deployment webhook configured. Set DISCORD_TOKEN or DISCORD_DEPLOYMENT_WEBHOOK_URL environment variable.",
+				"No Discord deployment webhook configured. Set DISCORD_TOKEN or DISCORD_DEPLOYMENT_WEBHOOK_URL environment variable.",
 			);
 		}
 	} catch (error) {
-		console.error("❌ Error sending deployment webhook:", error.message);
+		console.error("Error sending deployment webhook:", error.message);
 	}
 }
 

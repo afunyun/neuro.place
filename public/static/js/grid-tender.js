@@ -6,7 +6,6 @@
 class GridTender {
 	constructor(options = {}) {
 		this.backendUrl = options.backendUrl || window.location.origin;
-		this.adminUserIds = options.adminUserIds || [];
 		this.whitelistEnabled = options.whitelistEnabled !== false;
 		this.debugMode = options.debugMode !== false;
 
@@ -14,7 +13,7 @@ class GridTender {
 		this.userData = null;
 		this.isAuthenticated = false;
 		this.isWhitelisted = false;
-		this.isAdmin = false;
+		this.isAdmin = false; // Determined server-side via ADMIN_USER_IDS environment variable
 
 		this.statusElement = null;
 		this.adminPanelElement = null;

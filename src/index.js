@@ -1,3 +1,4 @@
+import { createHash, randomBytes } from "node:crypto";
 import { Hono } from "hono";
 
 function detectDevice(userAgent) {
@@ -54,15 +55,97 @@ function observeSession(env, eventData) {
 	});
 }
 
+// sanitize, validate pix input
+function validatePixelCoordinates(x, y) {
+	if (typeof x !== "number" || typeof y !== "number") return false;
+	if (!Number.isInteger(x) || !Number.isInteger(y)) return false;
+	if (x < 0 || x >= 500 || y < 0 || y >= 500) return false;
+	return true;
+}
+
+function validateHexColor(color) {
+	if (typeof color !== "string") return false;
+	return /^#[0-9A-Fa-f]{6}$/.test(color);
+}
+
+function sanitizeString(input, maxLength = 100) {
+	if (typeof input !== "string") return "";
+	return input
+		.trim()
+		.substring(0, maxLength)
+		.replace(/[<>"'&]/g, "");
+}
+
 const app = new Hono();
 
+// Security constants
+const RATE_LIMITS = {
+	ADMIN_ENDPOINT: { requests: 5, window: 60000 }, // 5 requests per minute
+	OAUTH_ENDPOINT: { requests: 10, window: 60000 }, // 10 requests per minute
+	PIXEL_PLACEMENT: { requests: 60, window: 60000 }, // 60 requests per minute
+	GENERAL_API: { requests: 30, window: 60000 }, // 30 requests per minute
+};
+
+// For production, use Durable Objects or KV - temporary rate limit store
+const rateLimitStore = new Map();
+
+// same as above - temp token store
+const csrfTokenStore = new Map();
+
+// cache auth'd tokens to limit api calling for no reason
+const tokenCache = new Map();
+const TOKEN_CACHE_TTL = 300000; // 5 minutes
+
+// generate CSRF token
+function generateCSRFToken() {
+	return randomBytes(32).toString("hex");
+}
+
+function validateCSRFToken(token, storedToken) {
+	if (!token || !storedToken) return false;
+	return token === storedToken;
+}
+
+function getRateLimitKey(ip, endpoint) {
+	return `${ip}:${endpoint}`;
+}
+
+function isRateLimited(ip, endpoint, limits) {
+	const key = getRateLimitKey(ip, endpoint);
+	const now = Date.now();
+	const record = rateLimitStore.get(key);
+
+	if (!record) {
+		rateLimitStore.set(key, { count: 1, resetTime: now + limits.window });
+		return false;
+	}
+
+	if (now > record.resetTime) {
+		rateLimitStore.set(key, { count: 1, resetTime: now + limits.window });
+		return false;
+	}
+
+	if (record.count >= limits.requests) {
+		return true;
+	}
+
+	record.count++;
+	return false;
+}
+
+// cors (hate)
 const cors = (c, next) => {
 	if (c.req.method === "OPTIONS") {
 		return new Response(null, {
 			headers: {
 				"Access-Control-Allow-Origin": "*",
 				"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-				"Access-Control-Allow-Headers": "Content-Type, Authorization",
+				"Access-Control-Allow-Headers":
+					"Content-Type, Authorization, X-CSRF-Token",
+				"X-Content-Type-Options": "nosniff",
+				"X-Frame-Options": "DENY",
+				"X-XSS-Protection": "1; mode=block",
+				"Strict-Transport-Security": "max-age=31536000; includeSubDomains",
 			},
 		});
 	}
@@ -71,7 +154,37 @@ const cors = (c, next) => {
 
 app.use("*", cors);
 
+// get csrf token. all originate here
+app.get("/api/csrf-token", async (c) => {
+	const token = extractBearerToken(c.req);
+	if (!token) {
+		return c.json({ message: "Authentication required" }, 401);
+	}
+
+	const csrfToken = generateCSRFToken();
+	csrfTokenStore.set(token, csrfToken);
+
+	// expire token (30 minutes)
+	setTimeout(() => {
+		csrfTokenStore.delete(token);
+	}, 1800000);
+
+	return c.json({ csrfToken });
+});
+
+// oauth rate limit
 app.post("/auth/discord", async (c) => {
+	const clientIP =
+		c.req.header("CF-Connecting-IP") ||
+		c.req.header("X-Forwarded-For") ||
+		"unknown";
+
+	if (isRateLimited(clientIP, "oauth", RATE_LIMITS.OAUTH_ENDPOINT)) {
+		return c.json(
+			{ message: "Rate limit exceeded. Please try again later." },
+			429,
+		);
+	}
 	try {
 		const { code, redirect_uri, sessionId, authStartTime } = await c.req.json();
 		console.log("DEBUG ENV:", Object.keys(c.env));
@@ -277,7 +390,7 @@ export class GridDurableObject {
 				if (info?.isAdmin) {
 					this.adminSessions.add(ws);
 				}
-			} catch { }
+			} catch {}
 		}
 	}
 
@@ -665,20 +778,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/whitelist" && request.method === "GET") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			await this.initializeWhitelist();
@@ -698,32 +805,36 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/whitelist/add" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			try {
 				const { userId, username } = await request.json();
-				if (!userId) {
+
+				// validate
+				if (
+					!userId ||
+					typeof userId !== "string" ||
+					userId.length < 10 ||
+					userId.length > 20
+				) {
 					return new Response(
-						JSON.stringify({ message: "User ID is required" }),
+						JSON.stringify({ message: "Valid User ID is required" }),
 						{ status: 400, headers: corsHeaders },
 					);
 				}
 
-				const result = await this.addToWhitelist(userId, username);
+				const sanitizedUsername = username
+					? sanitizeString(username, 32)
+					: null;
+				const result = await this.addToWhitelist(userId, sanitizedUsername);
 				return new Response(JSON.stringify(result), {
 					status: result.success ? 200 : 400,
 					headers: corsHeaders,
@@ -740,22 +851,15 @@ export class GridDurableObject {
 			url.pathname === "/admin/whitelist/remove" &&
 			request.method === "POST"
 		) {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
-			}
-
 			try {
 				const { userId } = await request.json();
 				if (!userId) {
@@ -782,20 +886,14 @@ export class GridDurableObject {
 			url.pathname === "/admin/whitelist/toggle" &&
 			request.method === "POST"
 		) {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			const result = await this.toggleWhitelist();
@@ -803,20 +901,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/users" && request.method === "GET") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			return new Response(
@@ -829,20 +921,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/users/add" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			try {
@@ -879,20 +965,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/users/remove" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			try {
@@ -927,18 +1007,26 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/broadcast" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
+			const { user } = authResult;
 
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
+			// CSRF protection
+			const csrfToken = request.headers.get("X-CSRF-Token");
+			const sessionToken = extractBearerToken(request);
+			if (
+				!csrfToken ||
+				!validateCSRFToken(csrfToken, csrfTokenStore.get(sessionToken))
+			) {
 				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
+					JSON.stringify({ message: "CSRF token validation failed" }),
 					{ status: 403, headers: corsHeaders },
 				);
 			}
@@ -981,20 +1069,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/announcement" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			try {
@@ -1029,20 +1111,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/announcement" && request.method === "DELETE") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			this.currentAnnouncement = "";
@@ -1136,7 +1212,7 @@ export class GridDurableObject {
 							if (Array.isArray(parsed) && parsed.length === chunkSize) {
 								chunkData = parsed;
 							}
-						} catch { }
+						} catch {}
 					}
 					if (!chunkData) {
 						chunkData = Array(chunkSize)
@@ -1183,6 +1259,21 @@ export class GridDurableObject {
 		}
 		if (url.pathname === "/pixel" && request.method === "POST") {
 			try {
+				const clientIP =
+					request.headers.get("CF-Connecting-IP") ||
+					request.headers.get("X-Forwarded-For") ||
+					"unknown";
+
+				// rate limit (PIXEL ONLY)
+				if (isRateLimited(clientIP, "pixel", RATE_LIMITS.PIXEL_PLACEMENT)) {
+					return new Response(
+						JSON.stringify({
+							message: "Rate limit exceeded. Please slow down.",
+						}),
+						{ status: 429, headers: corsHeaders },
+					);
+				}
+
 				if (this.gridUpdatesPaused) {
 					return new Response(
 						JSON.stringify({
@@ -1225,20 +1316,12 @@ export class GridDurableObject {
 				console.log("Parsed request data:", requestData);
 				const { x, y, color } = requestData;
 
-				if (
-					x == null ||
-					y == null ||
-					!color ||
-					x < 0 ||
-					x >= 500 ||
-					y < 0 ||
-					y >= 500 ||
-					!/^#[0-9A-Fa-f]{6}$/.test(color)
-				) {
+				// validate input
+				if (!validatePixelCoordinates(x, y) || !validateHexColor(color)) {
 					return new Response(
 						JSON.stringify({
 							message:
-								"Invalid pixel data - color must be valid hex format #RRGGBB",
+								"Invalid pixel data - coordinates must be integers 0-499 and color must be valid hex format #RRGGBB",
 						}),
 						{ status: 400, headers: corsHeaders },
 					);
@@ -1247,8 +1330,8 @@ export class GridDurableObject {
 				const requesterKey = user
 					? user.id
 					: request.headers.get("x-session-id") ||
-					request.headers.get("cf-connecting-ip") ||
-					"anonymous";
+						request.headers.get("cf-connecting-ip") ||
+						"anonymous";
 				const nowTs = Date.now();
 				if (!this.isAdmin(requesterKey)) {
 					const lastTs = this.lastPlacementByUser.get(requesterKey) || 0;
@@ -1277,7 +1360,7 @@ export class GridDurableObject {
 							if (Array.isArray(parsed) && parsed.length === 50) {
 								chunkArr = parsed;
 							}
-						} catch { }
+						} catch {}
 					}
 					if (!chunkArr) {
 						chunkArr = Array(50)
@@ -1312,8 +1395,8 @@ export class GridDurableObject {
 					sessionId: user
 						? user.id
 						: requestData.sessionId ||
-						request.headers.get("x-session-id") ||
-						"anonymous",
+							request.headers.get("x-session-id") ||
+							"anonymous",
 					inputMethod:
 						requestData.inputMethod ||
 						request.headers.get("x-input-method") ||
@@ -1388,20 +1471,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/grid/restore" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			try {
@@ -1472,21 +1549,16 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/grid/clear" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
-			}
+			const { user } = authResult;
 
 			try {
 				const blankChunk = Array(50)
@@ -1531,21 +1603,16 @@ export class GridDurableObject {
 			url.pathname === "/admin/deployment/webhook" &&
 			request.method === "POST"
 		) {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
-			}
+			const { user } = authResult;
 
 			try {
 				const deploymentInfo = await request.json();
@@ -1589,28 +1656,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/auth-check" && request.method === "GET") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user) {
-				return new Response(
-					JSON.stringify({ message: "Invalid or expired token" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const isAdmin = this.isAdmin(user.id);
-			if (!isAdmin) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			return new Response(JSON.stringify({ isAdmin: true }), {
@@ -1619,20 +1672,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/grid-snapshot" && request.method === "GET") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			const chunkParam = url.searchParams.get("chunk");
@@ -1662,7 +1709,7 @@ export class GridDurableObject {
 							if (Array.isArray(parsed) && parsed.length === chunkSize) {
 								chunkData = parsed;
 							}
-						} catch { }
+						} catch {}
 					}
 					if (!chunkData) {
 						chunkData = Array(chunkSize)
@@ -1695,7 +1742,7 @@ export class GridDurableObject {
 								if (Array.isArray(parsed) && parsed.length === chunkSize) {
 									chunkData = parsed;
 								}
-							} catch { }
+							} catch {}
 						}
 						if (!chunkData) {
 							chunkData = Array(chunkSize)
@@ -1736,20 +1783,14 @@ export class GridDurableObject {
 			url.pathname === "/admin/connections-count" &&
 			request.method === "GET"
 		) {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			return new Response(JSON.stringify({ count: this.sessions.size }), {
@@ -1758,20 +1799,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/pixel-log" && request.method === "GET") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			const limit = Math.min(
@@ -1789,21 +1824,16 @@ export class GridDurableObject {
 			url.pathname === "/admin/disconnect-session" &&
 			request.method === "POST"
 		) {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
-			}
+			const { user } = authResult;
 
 			try {
 				const { sessionId } = await request.json();
@@ -1838,21 +1868,16 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/toast" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
-			}
+			const { user } = authResult;
 
 			try {
 				const { message, type = "info" } = await request.json();
@@ -1889,21 +1914,16 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/status-update" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
-			}
+			const { user } = authResult;
 
 			try {
 				const { message } = await request.json();
@@ -1928,21 +1948,16 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/pause-updates" && request.method === "POST") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
-			}
+			const { user } = authResult;
 
 			try {
 				const { pause } = await request.json();
@@ -1973,20 +1988,14 @@ export class GridDurableObject {
 		}
 
 		if (url.pathname === "/admin/pause-status" && request.method === "GET") {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
-			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
 
 			return new Response(
@@ -1999,21 +2008,16 @@ export class GridDurableObject {
 			url.pathname === "/admin/grid-manipulate" &&
 			request.method === "POST"
 		) {
-			const token = extractBearerToken(request);
-			if (!token) {
-				return new Response(
-					JSON.stringify({ message: "Authentication required" }),
-					{ status: 401, headers: corsHeaders },
-				);
+			// Combined rate limiting and admin authentication
+			const authResult = await requireAdminAuthWithRateLimit(
+				request,
+				this.env,
+				corsHeaders,
+			);
+			if (authResult.response) {
+				return authResult.response;
 			}
-
-			const user = await validateDiscordToken(token, this.env);
-			if (!user || !this.isAdmin(user.id)) {
-				return new Response(
-					JSON.stringify({ message: "Admin access required" }),
-					{ status: 403, headers: corsHeaders },
-				);
-			}
+			const { user } = authResult;
 
 			try {
 				const { action, x, y, color } = await request.json();
@@ -2051,7 +2055,7 @@ export class GridDurableObject {
 								if (Array.isArray(parsed) && parsed.length === 50) {
 									chunkArr = parsed;
 								}
-							} catch { }
+							} catch {}
 						}
 						if (!chunkArr) {
 							chunkArr = Array(50)
@@ -2149,7 +2153,7 @@ export class GridDurableObject {
 					this.adminSessions.add(ws);
 					try {
 						ws.serializeAttachment?.({ isAdmin: true, user: user.username });
-					} catch { }
+					} catch {}
 					this.logToConsole(
 						"info",
 						`Admin console connected: ${user.username}`,
@@ -2163,7 +2167,7 @@ export class GridDurableObject {
 				this.adminSessions.delete(ws);
 				return;
 			}
-		} catch { }
+		} catch {}
 	}
 
 	async webSocketClose(ws) {
@@ -2181,7 +2185,7 @@ export class GridDurableObject {
 		for (const ws of this.state.getWebSockets()) {
 			try {
 				ws.send(messageStr);
-			} catch { }
+			} catch {}
 		}
 	}
 
@@ -2215,7 +2219,7 @@ export class GridDurableObject {
 		for (const ws of targets) {
 			try {
 				ws.send(messageStr);
-			} catch { }
+			} catch {}
 		}
 	}
 
@@ -2393,14 +2397,130 @@ function extractBearerToken(request) {
 	return authHeader.substring(7);
 }
 
+// Discord rate limit
 async function validateDiscordToken(token, _env) {
-	try {
-		const response = await fetch("https://discord.com/api/users/@me", {
-			headers: { Authorization: `Bearer ${token}` },
-		});
-		if (!response.ok) return null;
-		return await response.json();
-	} catch {
+	if (!token || typeof token !== "string" || token.length < 10) {
 		return null;
 	}
+
+	// Check cache first
+	const cacheKey = createHash("sha256").update(token).digest("hex");
+	const cached = tokenCache.get(cacheKey);
+
+	if (cached && Date.now() - cached.timestamp < TOKEN_CACHE_TTL) {
+		return cached.user;
+	}
+
+	try {
+		const response = await fetch("https://discord.com/api/users/@me", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				"User-Agent": "neuro.place/1.0",
+			},
+			timeout: 5000, // 5 second timeout
+		});
+
+		if (!response.ok) {
+			// Remove from cache if token is invalid
+			tokenCache.delete(cacheKey);
+			return null;
+		}
+
+		const user = await response.json();
+
+		// Validate user object structure
+		if (!user.id || !user.username) {
+			return null;
+		}
+
+		// Cache the result
+		tokenCache.set(cacheKey, {
+			user: user,
+			timestamp: Date.now(),
+		});
+
+		// Clean old cache entries periodically
+		if (tokenCache.size > 1000) {
+			const now = Date.now();
+			for (const [key, value] of tokenCache.entries()) {
+				if (now - value.timestamp > TOKEN_CACHE_TTL) {
+					tokenCache.delete(key);
+				}
+			}
+		}
+
+		return user;
+	} catch (error) {
+		console.error("Discord token validation error:", error.message);
+		return null;
+	}
+}
+
+// Enhanced admin authentication with rate limiting middleware
+async function requireAdminAuthWithRateLimit(request, env, corsHeaders) {
+	const clientIP =
+		request.headers.get("CF-Connecting-IP") ||
+		request.headers.get("X-Forwarded-For") ||
+		"unknown";
+
+	// Rate limiting
+	if (isRateLimited(clientIP, "admin", RATE_LIMITS.ADMIN_ENDPOINT)) {
+		return {
+			response: new Response(
+				JSON.stringify({
+					message: "Rate limit exceeded. Please try again later.",
+				}),
+				{ status: 429, headers: corsHeaders },
+			),
+		};
+	}
+
+	// Admin authentication
+	const authResult = await requireAdminAuth(request, env);
+	if (authResult.error) {
+		return {
+			response: new Response(JSON.stringify({ message: authResult.error }), {
+				status: authResult.status,
+				headers: corsHeaders,
+			}),
+		};
+	}
+
+	return { user: authResult.user, adminUserIds: authResult.adminUserIds };
+}
+
+async function requireAdminAuth(request, env) {
+	const token = extractBearerToken(request);
+	if (!token) {
+		return { error: "Authentication required", status: 401 };
+	}
+
+	const user = await validateDiscordToken(token, env);
+	if (!user) {
+		return { error: "Invalid or expired token", status: 401 };
+	}
+
+	// pull current admins
+	let adminUserIds = [];
+	try {
+		const adminData = await env.PALETTE_KV.get("admin_users", { type: "json" });
+		if (adminData && Array.isArray(adminData)) {
+			adminUserIds = adminData;
+		} else {
+			adminUserIds = (env.ADMIN_USER_IDS || "")
+				.split(",")
+				.filter((id) => id.trim());
+		}
+	} catch (error) {
+		console.error("Error loading admin users:", error);
+		adminUserIds = (env.ADMIN_USER_IDS || "")
+			.split(",")
+			.filter((id) => id.trim());
+	}
+
+	if (!adminUserIds.includes(user.id)) {
+		return { error: "Admin access required", status: 403 };
+	}
+
+	return { user, adminUserIds };
 }

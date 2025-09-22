@@ -23,7 +23,7 @@ const DEFAULT_BACKGROUND_CONFIG = {
 /**
  * random cogs
  * @param {HTMLElement} container - what are you attaching to
- * @param {Object} config -- controls what controls this cog
+ * @param {Object} config -- config what controls this cog
  */
 function generateRandomCogs(container, config = {}) {
 	const cogConfig = { ...DEFAULT_BACKGROUND_CONFIG.cogs, ...config };

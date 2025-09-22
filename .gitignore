@@ -16,3 +16,4 @@ secret_deploy.sh
 yarn.lock
 tools/
 timer/*
+security-test.js
